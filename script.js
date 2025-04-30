@@ -1,5 +1,5 @@
 // ✅ Step 1: Initialize the Mapbox map
-mapboxgl.accessToken = 'sk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmdmdWUwbjcyMnFvZ2U4Y3M5cGpvIn0.S0s3iAQCc6dLVPdQXpmfQw';
+mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/flushingtownhall/cma3bhpb4000l01qwf955dtqx',
