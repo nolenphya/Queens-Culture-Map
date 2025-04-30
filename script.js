@@ -1,8 +1,8 @@
 // ✅ Step 1: Initialize the Mapbox map
-mapboxgl.accessToken = 'pk.eyJ1Ijoibm9sZW5waHlhIiwiYSI6ImNtOGk3bXB1MzBhM2Qyc292ZjZrZ2tjMHMifQ.ZItrPCguE2g3w99InSdzLQ';
+mapboxgl.accessToken = 'sk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmdmdWUwbjcyMnFvZ2U4Y3M5cGpvIn0.S0s3iAQCc6dLVPdQXpmfQw';
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/nolenphya/cm8hobpgo00u101s5d3ebdjdz',
+  style: 'mapbox://styles/flushingtownhall/cma3bhpb4000l01qwf955dtqx',
   center: [-74.006, 40.7128],
   zoom: 10
 });
@@ -29,7 +29,8 @@ geocoder.on('result', function(e) {
 
 // ✅ Step 2: Fetch and parse CSV using Papa Parse (unchanged)
 function fetchData() {
-  const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9tYTUHZn_xeNv_blqO8x8RngTQ1Fg14tBbhhqPvJ-BfGPyE0O54jngg-pUjuTNzhpYR6WySwdM_cu/pub?gid=1517657781&single=true&output=csv';
+  const sheetURL = 'https://docs.google.com/spreadsheets/d/14m6_RP2yfUjLirv8HC5xav8sIMKFVuT4BHW-vRZqB-Q/export?format=csv';
+
   fetch(sheetURL)
     .then(response => response.text())
     .then(csvData => {
@@ -48,29 +49,29 @@ function fetchData() {
     .catch(error => console.error("Failed to fetch CSV:", error));
 }
 
+
 // Pick some predefined colors
-const artistColors = {};
-const availableColors = [
+const tagGroups = {};        // e.g., { 'Gallery': [marker1, marker2] }
+const tagColors = {};
+const colorPalette = [
   '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
   '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
   '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000'
 ];
 
-function getColorForArtist(artist) {
-  if (!artistColors[artist]) {
-    // Rotate through colors (fallback if we run out)
-    const color = availableColors[Object.keys(artistColors).length % availableColors.length];
-    artistColors[artist] = color;
+function getColorForTag(tag) {
+  if (!tagColors[tag]) {
+    const color = colorPalette[Object.keys(tagColors).length % colorPalette.length];
+    tagColors[tag] = color;
   }
-  return artistColors[artist];
+  return tagColors[tag];
 }
+  
 
 
 // ✅ Step 3: Add markers to the map
 
 let allMarkers = []; // Declare this at the global level
-
-const artistGroups = {}; // Artist name → list of markers
 
 function addMarkers(data) {
   allMarkers.forEach(marker => marker.remove());
@@ -78,61 +79,70 @@ function addMarkers(data) {
 
   data.forEach(row => {
     const lat = parseFloat(row.Latitude);
-const lng = parseFloat(row.Longitude);
-if (isNaN(lat) || isNaN(lng)) {
-  console.warn('Skipping row with bad coordinates:', row);
-  return;
-}
+    const lng = parseFloat(row.Longitude);
+    if (isNaN(lat) || isNaN(lng)) {
+      console.warn('Skipping row with bad coordinates:', row);
+      return;
+    }
 
-  
-    const artist = row.Name || 'Anonymous';
-    const markerColor = getColorForArtist(artist); // ✅ define color here
-  
-    const marker = new mapboxgl.Marker({ color: markerColor })
-    .setLngLat([lng, lat])
-      .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(`
-        <div style="max-width: 300px;">
-          <img src="${row.PhotoURL}" 
-               alt="User Photo" 
-               style="width:100%; max-height:250px; object-fit:cover; border-radius:8px;" />
-          <h3>${row.Name || 'Anonymous'}</h3>
-          <p><b>Age:</b> ${row.Age || 'N/A'}</p>
-          <p><b>Social Media:</b> ${row.Social || 'N/A'}</p>
-          <p><b>Photography Experience:</b> ${row.Experience || 'N/A'}</p>
-          <p><b>Description:</b> ${row.Description || 'N/A'}</p>
-        </div>
-      `))
+    const org = row["Org Name"] || "Unnamed Organization";
+    const address = row["Address"] || "No address provided";
+    const email = row["Email"] || "";
+    const phone = row["Phone"] || "";
+    const tags = (row["Tags"] || "").split(',').map(t => t.trim()).filter(t => t);
+    const website = row["Website"] || "";
+    const social = row["Social"] || "";
+    const image = row["Image"] || "";
+
+    const popupHTML = `
+      <div style="max-width: 300px;">
+        ${image ? `<img src="${image}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-bottom:8px;" />` : ""}
+        <h3>${org}</h3>
+        <p><strong>Address:</strong><br>${address}</p>
+        ${email ? `<p><strong>Email:</strong><br><a href="mailto:${email}">${email}</a></p>` : ""}
+        ${phone ? `<p><strong>Phone:</strong><br>${phone}</p>` : ""}
+        ${tags ? `<p><strong>Tags:</strong><br>${tags}</p>` : ""}
+        ${website ? `<p><strong>Website:</strong><br><a href="${website}" target="_blank">${website}</a></p>` : ""}
+        ${social ? `<p><strong>Social:</strong><br>${social}</p>` : ""}
+      </div>
+    `;
+
+    tags.forEach(tag => {
+      const color = getColorForTag(tag);
+    
+      const marker = new mapboxgl.Marker({ color })
+      .setLngLat([lng, lat])
+      .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML))
       .addTo(map);
   
     marker.rowData = row;
+  
+    if (!tagGroups[tag]) tagGroups[tag] = [];
+    tagGroups[tag].push(marker);
     allMarkers.push(marker);
-  
-    if (!artistGroups[artist]) {
-      artistGroups[artist] = [];
-    }
-  
-    artistGroups[artist].push(marker);
   });
-  
+  });
 
-  buildLegend();
+  buildLegend(); 
 }
+
+buildLegendByTag();
 
 // Add Legend
 
-function buildLegend() {
+function buildLegendByTag() {
   const legendContainer = document.getElementById('legend');
-  legendContainer.innerHTML = ''; // Clear existing
+  legendContainer.innerHTML = '';
 
-  Object.keys(artistGroups).forEach(artist => {
-    const color = getColorForArtist(artist);
+  Object.keys(tagGroups).forEach(tag => {
+    const color = getColorForTag(tag);
 
     const item = document.createElement('label');
     item.className = 'legend-item';
     item.style.display = 'flex';
     item.style.alignItems = 'center';
+    item.style.marginBottom = '6px';
     item.style.gap = '8px';
-    item.style.marginBottom = '5px';
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
@@ -140,8 +150,7 @@ function buildLegend() {
 
     checkbox.onchange = () => {
       const visible = checkbox.checked;
-
-      artistGroups[artist].forEach(marker => {
+      tagGroups[tag].forEach(marker => {
         marker.getElement().style.display = visible ? 'block' : 'none';
       });
     };
@@ -151,18 +160,17 @@ function buildLegend() {
     swatch.style.width = '16px';
     swatch.style.height = '16px';
     swatch.style.borderRadius = '50%';
-    swatch.style.display = 'inline-block';
 
-    const nameText = document.createElement('span');
-    nameText.textContent = artist;
+    const tagLabel = document.createElement('span');
+    tagLabel.textContent = tag;
 
     item.appendChild(checkbox);
     item.appendChild(swatch);
-    item.appendChild(nameText);
-
+    item.appendChild(tagLabel);
     legendContainer.appendChild(item);
   });
 }
+
 
 
 
