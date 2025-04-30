@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mirror Magazine Community Map</title>
+  
+  <!-- Mapbox GL JS -->
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+
+<!-- Mapbox Geocoder Plugin -->
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css" />
+
+
+  <!-- Mapbox Search JS Web Framework -->
+  <script id="search-js" defer src="https://api.mapbox.com/search-js/v1.0.0/web.js"></script>
+  
+  <!-- Papa Parse -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+
+  <div id="map"></div>
+  <div id="legend" class="map-legend"></div>
+
+<style>
+  .map-legend {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: white;
+    border: 1px solid #aaa;
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-family: sans-serif;
+    z-index: 1000;
+  }
+  .legend-item {
+    padding: 5px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .legend-item.hidden {
+    text-decoration: line-through;
+    color: gray;
+    opacity: 0.6;
+  }
+</style>
+
+
+  <script src="script.js"></script>
+</body>
+</html>
