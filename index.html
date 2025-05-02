@@ -1,65 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mirror Magazine Community Map</title>
-  
-  <!-- Mapbox GL JS -->
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <title>Queens Art Venue Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Mapbox Geocoder Plugin -->
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css" />
+  <!-- Mapbox CSS -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+  <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet" />
 
+  <!-- Custom styles -->
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+    }
 
-  <!-- Mapbox Search JS Web Framework -->
-  <script id="search-js" defer src="https://api.mapbox.com/search-js/v1.0.0/web.js"></script>
-  
-  <!-- Papa Parse -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css" />
+    #legend-wrapper {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 10;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-family: sans-serif;
+      font-size: 14px;
+      width: 240px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    #legend-toggle {
+      width: 100%;
+      background: #eee;
+      border: none;
+      padding: 6px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    #legend.hidden {
+      display: none;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+      gap: 8px;
+    }
+
+    .custom-marker {
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+  </style>
 </head>
 <body>
+
+  <div id="map"></div>
 
   <div id="legend-wrapper">
     <button id="legend-toggle">Hide Legend</button>
     <div id="legend"></div>
   </div>
-  
-  <div id="map"></div>
-
-
-  
-<style>
-  .map-legend {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: white;
-    border: 1px solid #aaa;
-    padding: 10px;
-    max-height: 300px;
-    overflow-y: auto;
-    font-family: sans-serif;
-    z-index: 1000;
-  }
-  .legend-item {
-    padding: 5px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .legend-item.hidden {
-    text-decoration: line-through;
-    color: gray;
-    opacity: 0.6;
-  }
-</style>
-
-
-  <script src="script.js"></script>
-</body>
-</html>
