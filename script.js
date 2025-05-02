@@ -26,156 +26,203 @@ map.addControl(geocoder);
 geocoder.on('result', function(e) {
   console.log('Selected location:', e.result);
 });
- // Globals
- let allMarkers = [];
- const tagGroups = {};
- const tagColors = {};
- const colorPalette = [
-   '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
-   '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
-   '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000'
- ];
 
- function getColorForTag(tag) {
-   if (!tagColors[tag]) {
-     const color = colorPalette[Object.keys(tagColors).length % colorPalette.length];
-     tagColors[tag] = color;
-   }
-   return tagColors[tag];
- }
 
- function createColorIcon(color) {
-   const svg = encodeURIComponent(`
-     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 24 24" fill="${color}">
-       <path d="M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7z"/>
-     </svg>
-   `);
-   return `data:image/svg+xml,${svg}`;
- }
+// ✅ Step 2: Fetch and parse CSV using Papa Parse (unchanged)
+function fetchData() {
+  const sheetURL = 'https://docs.google.com/spreadsheets/d/14m6_RP2yfUjLirv8HC5xav8sIMKFVuT4BHW-vRZqB-Q/export?format=csv';
 
- function fetchData() {
-   const sheetURL = 'https://docs.google.com/spreadsheets/d/14m6_RP2yfUjLirv8HC5xav8sIMKFVuT4BHW-vRZqB-Q/export?format=csv';
-   fetch(sheetURL)
-     .then(res => res.text())
-     .then(csv => {
-       Papa.parse(csv, {
-         header: true,
-         dynamicTyping: true,
-         complete: result => addMarkers(result.data)
-       });
-     });
- }
+  fetch(sheetURL)
+    .then(response => response.text())
+    .then(csvData => {
+      Papa.parse(csvData, {
+        header: true,
+        dynamicTyping: true,
+        complete: (results) => {
+          console.log("Parsed Data:", results.data);
+          addMarkers(results.data);
+        },
+        error: (error) => {
+          console.error("Error parsing CSV:", error);
+        }
+      });
+    })
+    .catch(error => console.error("Failed to fetch CSV:", error));
+}
 
- function addMarkers(data) {
-   allMarkers.forEach(m => m.remove());
-   allMarkers = [];
-   Object.keys(tagGroups).forEach(k => tagGroups[k] = []); // reset tagGroups
 
-   data.forEach(row => {
-     const lat = parseFloat(row.Latitude);
-     const lng = parseFloat(row.Longitude);
-     if (isNaN(lat) || isNaN(lng)) return;
+// Pick some predefined colors
+const tagGroups = {};
+const tagColors = {};
+const colorPalette = [
+  '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+  '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+  '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000'
+];
 
-     const org = row["Org Name"] || "Unnamed";
-     const address = row["Address"] || "N/A";
-     const email = row["Email"] || "";
-     const phone = row["Phone"] || "";
-     const tags = (row["Tags"] || "").split(',').map(t => t.trim()).filter(Boolean);
-     const website = row["Website"] || "";
-     const social = row["Social"] || "";
-     const image = row["Image"] || "";
+function getColorForTag(tag) {
+  if (!tagColors[tag]) {
+    const color = colorPalette[Object.keys(tagColors).length % colorPalette.length];
+    tagColors[tag] = color;
+  }
+  return tagColors[tag];
+}
 
-     const popupHTML = `
-       <div style="max-width: 300px;">
-         ${image ? `<img src="${image}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-bottom:8px;" />` : ""}
-         <h3>${org}</h3>
-         <p><strong>Address:</strong><br>${address}</p>
-         ${email ? `<p><strong>Email:</strong><br><a href="mailto:${email}">${email}</a></p>` : ""}
-         ${phone ? `<p><strong>Phone:</strong><br>${phone}</p>` : ""}
-         ${tags.length ? `<p><strong>Tags:</strong><br>${tags.join(', ')}</p>` : ""}
-         ${website ? `<p><strong>Website:</strong><br><a href="${website}" target="_blank">${website}</a></p>` : ""}
-         ${social ? `<p><strong>Social:</strong><br>${social}</p>` : ""}
-       </div>
-     `;
 
-     tags.forEach(tag => {
-       const color = getColorForTag(tag);
-       const el = document.createElement('div');
-       el.className = 'custom-marker';
-       el.style.backgroundImage = `url(${createColorIcon(color)})`;
-       el.style.width = '30px';
-       el.style.height = '40px';
-       el.style.backgroundSize = 'contain';
+function createColorIcon(color) {
+  const svg = encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 24 24" fill="${color}">
+      <path d="M12 2C8.1 2 5 5.1 5 9c0 5.3 7 13 7 13s7-7.7 7-13c0-3.9-3.1-7-7-7z"/>
+    </svg>
+  `);
+  return `data:image/svg+xml,${svg}`;
+}
 
-       const marker = new mapboxgl.Marker(el)
-         .setLngLat([lng, lat])
-         .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML))
-         .addTo(map);
 
-       marker.rowData = row;
-       allMarkers.push(marker);
-       if (!tagGroups[tag]) tagGroups[tag] = [];
-       tagGroups[tag].push(marker);
-     });
-   });
 
-   buildLegendByTag();
- }
+// ✅ Step 3: Add markers to the map
 
- function buildLegendByTag() {
-   const legend = document.getElementById('legend');
-   legend.innerHTML = '';
-   const selectedTags = new Set(Object.keys(tagGroups));
+let allMarkers = []; // Declare this at the global level
 
-   Object.keys(tagGroups).forEach(tag => {
-     const color = getColorForTag(tag);
-     const item = document.createElement('label');
-     item.className = 'legend-item';
+function addMarkers(data) {
+  allMarkers.forEach(marker => marker.remove());
+  allMarkers = [];
 
-     const checkbox = document.createElement('input');
-     checkbox.type = 'checkbox';
-     checkbox.checked = true;
-     checkbox.dataset.tag = tag;
+  data.forEach(row => {
+    const lat = parseFloat(row.Latitude);
+    const lng = parseFloat(row.Longitude);
+    if (isNaN(lat) || isNaN(lng)) {
+      console.warn('Skipping row with bad coordinates:', row);
+      return;
+    }
 
-     checkbox.addEventListener('change', () => {
-       checkbox.checked ? selectedTags.add(tag) : selectedTags.delete(tag);
-       filterMarkersByTags(selectedTags);
-     });
+    const org = row["Org Name"] || "Unnamed Organization";
+    const address = row["Address"] || "No address provided";
+    const email = row["Email"] || "";
+    const phone = row["Phone"] || "";
+    const tags = (row["Tags"] || "").split(',').map(t => t.trim()).filter(t => t);
+    const website = row["Website"] || "";
+    const social = row["Social"] || "";
+    const image = row["Image"] || "";
 
-     const swatch = document.createElement('span');
-     swatch.style.backgroundColor = color;
-     swatch.style.width = '16px';
-     swatch.style.height = '16px';
-     swatch.style.borderRadius = '50%';
+    const popupHTML = `
+      <div style="max-width: 300px;">
+        ${image ? `<img src="${image}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px; margin-bottom:8px;" />` : ""}
+        <h3>${org}</h3>
+        <p><strong>Address:</strong><br>${address}</p>
+        ${email ? `<p><strong>Email:</strong><br><a href="mailto:${email}">${email}</a></p>` : ""}
+        ${phone ? `<p><strong>Phone:</strong><br>${phone}</p>` : ""}
+        ${tags ? `<p><strong>Tags:</strong><br>${tags}</p>` : ""}
+        ${website ? `<p><strong>Website:</strong><br><a href="${website}" target="_blank">${website}</a></p>` : ""}
+        ${social ? `<p><strong>Social:</strong><br>${social}</p>` : ""}
+      </div>
+    `;
 
-     const label = document.createElement('span');
-     label.textContent = tag;
+    tags.forEach(tag => {
+      const color = getColorForTag(tag);
+      const el = document.createElement('div');
+      el.className = 'custom-marker';
+      el.style.backgroundImage = `url(${createColorIcon(color)})`;
+      el.style.width = '30px';
+      el.style.height = '40px';
+      el.style.backgroundSize = 'contain';
+      
+      const marker = new mapboxgl.Marker(el)
+        .setLngLat([lng, lat])
+        .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML))
+        .addTo(map);
+      
+  
+    marker.rowData = row;
+  
+    if (!tagGroups[tag]) tagGroups[tag] = [];
+    tagGroups[tag].push(marker);
+    allMarkers.push(marker);
+  });
+  });
 
-     item.appendChild(checkbox);
-     item.appendChild(swatch);
-     item.appendChild(label);
-     legend.appendChild(item);
-   });
+  buildLegendByTag();
+}
 
-   filterMarkersByTags(selectedTags);
- }
+//buildLegendByTag();
 
- function filterMarkersByTags(selectedTags) {
-   allMarkers.forEach(marker => {
-     const venueTags = (marker.rowData.Tags || "")
-       .split(",")
-       .map(t => t.trim().toLowerCase());
+document.getElementById('legend-toggle').addEventListener('click', () => {
+  const legend = document.getElementById('legend');
+  const btn = document.getElementById('legend-toggle');
+  const isHidden = legend.classList.toggle('hidden');
+  btn.textContent = isHidden ? 'Show Legend' : 'Hide Legend';
+});
 
-     const matchAll = [...selectedTags].every(tag => venueTags.includes(tag.toLowerCase()));
-     marker.getElement().style.display = matchAll ? 'block' : 'none';
-   });
- }
 
- document.getElementById('legend-toggle').addEventListener('click', () => {
-   const legend = document.getElementById('legend');
-   const btn = document.getElementById('legend-toggle');
-   const isHidden = legend.classList.toggle('hidden');
-   btn.textContent = isHidden ? 'Show Legend' : 'Hide Legend';
- });
+// Add Legend
 
- map.on('load', fetchData);
+function buildLegendByTag() {
+  const legendContainer = document.getElementById('legend');
+  legendContainer.innerHTML = '';
+
+  const selectedTags = new Set();
+
+  Object.keys(tagGroups).forEach(tag => {
+    const color = getColorForTag(tag);
+
+    const item = document.createElement('label');
+    item.className = 'legend-item';
+    item.style.display = 'flex';
+    item.style.alignItems = 'center';
+    item.style.marginBottom = '6px';
+    item.style.gap = '8px';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.dataset.tag = tag;
+    checkbox.checked = true;
+    selectedTags.add(tag);
+
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        selectedTags.add(tag);
+      } else {
+        selectedTags.delete(tag);
+      }
+      filterMarkersByTags(selectedTags);
+    });
+
+    const swatch = document.createElement('span');
+    swatch.style.backgroundColor = color;
+    swatch.style.width = '16px';
+    swatch.style.height = '16px';
+    swatch.style.borderRadius = '50%';
+
+    const label = document.createElement('span');
+    label.textContent = tag;
+
+    item.appendChild(checkbox);
+    item.appendChild(swatch);
+    item.appendChild(label);
+
+    legendContainer.appendChild(item);
+  });
+
+  // Initial filter run
+  filterMarkersByTags(selectedTags);
+}
+
+function filterMarkersByTags(selectedTags) {
+  allMarkers.forEach(marker => {
+    const venueTags = (marker.rowData.Tags || "")
+      .split(",")
+      .map(t => t.trim().toLowerCase())
+      .filter(Boolean);
+
+    const allSelected = [...selectedTags].map(tag => tag.toLowerCase());
+
+    const matchesAll = allSelected.every(tag => venueTags.includes(tag));
+
+    marker.getElement().style.display = matchesAll ? 'block' : 'none';
+  });
+}
+
+
+
+// ✅ Step 4: Start fetching data
+map.on('load', fetchData);
