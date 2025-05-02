@@ -51,6 +51,23 @@ function fetchData() {
 
 
 // Pick some predefined colors
+const tagGroups = {};
+const tagColors = {};
+const colorPalette = [
+  '#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+  '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+  '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000'
+];
+
+function getColorForTag(tag) {
+  if (!tagColors[tag]) {
+    const color = colorPalette[Object.keys(tagColors).length % colorPalette.length];
+    tagColors[tag] = color;
+  }
+  return tagColors[tag];
+}
+
+
 function createColorIcon(color) {
   const svg = encodeURIComponent(`
     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 24 24" fill="${color}">
@@ -101,6 +118,7 @@ function addMarkers(data) {
     `;
 
     tags.forEach(tag => {
+      const color = getColorForTag(tag);
       const el = document.createElement('div');
       el.className = 'custom-marker';
       el.style.backgroundImage = `url(${createColorIcon(color)})`;
