@@ -123,10 +123,10 @@ function addMarkers(data) {
   });
   });
 
-  //buildLegendByTag();
+  buildLegendByTag();
 }
 
-buildLegendByTag();
+//buildLegendByTag();
 
 // Add Legend
 
