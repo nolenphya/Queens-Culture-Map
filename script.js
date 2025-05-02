@@ -123,7 +123,7 @@ function addMarkers(data) {
   });
   });
 
-  buildLegend(); 
+  //buildLegendByTag();
 }
 
 buildLegendByTag();
