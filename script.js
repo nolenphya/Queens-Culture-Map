@@ -50,8 +50,17 @@ function addMarkers(data) {
   allMarkers.length = 0;
 
   data.forEach(row => {
-    const lat = parseFloat(row.Latitude);
-    const lng = parseFloat(row.Longitude);
+    const latRaw = row.Latitude;
+const lngRaw = row.Longitude;
+
+if (!latRaw || !lngRaw || isNaN(parseFloat(latRaw)) || isNaN(parseFloat(lngRaw))) {
+  console.warn('🚫 Skipping row with invalid coordinates:', { lat: latRaw, lng: lngRaw, row });
+  return;
+}
+
+const lat = parseFloat(latRaw);
+const lng = parseFloat(lngRaw);
+
     if (isNaN(lat) || isNaN(lng)) return;
 
     const org = row["Org Name"] || "Unnamed";
