@@ -45,6 +45,7 @@ function createColorIcon(color) {
   return `data:image/svg+xml,${svg}`;
 }
 
+
 function addMarkers(data) {
   allMarkers.forEach(marker => marker.remove());
   allMarkers.length = 0;
@@ -98,7 +99,7 @@ const lng = parseFloat(lngRaw);
 
   buildLegendByTag();
 }
-
+console.log("🟡 Starting to add markers...");
 function fetchData() {
   const sheetURL = 'https://docs.google.com/spreadsheets/d/14m6_RP2yfUjLirv8HC5xav8sIMKFVuT4BHW-vRZqB-Q/export?format=csv';
   fetch(sheetURL)
@@ -112,7 +113,7 @@ function fetchData() {
     })
     .catch(err => console.error("Error loading CSV:", err));
 }
-
+console.log("🟢 Markers should be added now.");
 function buildLegendByTag() {
   const legendContainer = document.getElementById('legend');
   legendContainer.innerHTML = '';
