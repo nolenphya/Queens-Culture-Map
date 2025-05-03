@@ -52,6 +52,8 @@ function fetchData() {
 
 
 // Pick some predefined colors
+const selectedTags = new Set();
+
 const tagGroups = {};
 const tagColors = {};
 const colorPalette = [
@@ -112,33 +114,34 @@ function addMarkers(data) {
         <p><strong>Address:</strong><br>${address}</p>
         ${email ? `<p><strong>Email:</strong><br><a href="mailto:${email}">${email}</a></p>` : ""}
         ${phone ? `<p><strong>Phone:</strong><br>${phone}</p>` : ""}
-        ${tags ? `<p><strong>Tags:</strong><br>${tags}</p>` : ""}
+        ${tags.length ? `<p><strong>Tags:</strong><br>${tags.join(', ')}</p>` : ""}
         ${website ? `<p><strong>Website:</strong><br><a href="${website}" target="_blank">${website}</a></p>` : ""}
         ${social ? `<p><strong>Social:</strong><br>${social}</p>` : ""}
       </div>
     `;
 
-    tags.forEach(tag => {
-      const color = getColorForTag(tag);
-      const el = document.createElement('div');
-      el.className = 'custom-marker';
-      el.style.backgroundImage = `url(${createColorIcon(color)})`;
-      el.style.width = '30px';
-      el.style.height = '40px';
-      el.style.backgroundSize = 'contain';
-      
-      const marker = new mapboxgl.Marker(el)
-        .setLngLat([lng, lat])
-        .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML))
-        .addTo(map);
-      
-  
+    const mainTag = tags[0]; // use the first tag for color
+    const color = getColorForTag(mainTag);
+    const el = document.createElement('div');
+    el.className = 'custom-marker';
+    el.style.backgroundImage = `url(${createColorIcon(color)})`;
+    el.style.width = '30px';
+    el.style.height = '40px';
+    el.style.backgroundSize = 'contain';
+    
+    const marker = new mapboxgl.Marker(el)
+      .setLngLat([lng, lat])
+      .setPopup(new mapboxgl.Popup({ offset: 25 }).setHTML(popupHTML))
+      .addTo(map);
+    
     marker.rowData = row;
-  
-    if (!tagGroups[tag]) tagGroups[tag] = [];
-    tagGroups[tag].push(marker);
     allMarkers.push(marker);
-  });
+    
+    // Register marker under each tag
+    tags.forEach(tag => {
+      if (!tagGroups[tag]) tagGroups[tag] = [];
+      tagGroups[tag].push(marker);
+    });
   });
 
   buildLegendByTag();
@@ -160,7 +163,7 @@ function buildLegendByTag() {
   const legendContainer = document.getElementById('legend');
   legendContainer.innerHTML = '';
 
-  const selectedTags = new Set();
+  
 
   Object.keys(tagGroups).forEach(tag => {
     const color = getColorForTag(tag);
