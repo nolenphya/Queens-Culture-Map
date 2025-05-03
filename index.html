@@ -73,12 +73,27 @@
   </style>
 </head>
 <body>
+  
+  <div id="filter-container" style="position:absolute; top:10px; left:10px; z-index:1000; background:white; padding:10px; border-radius:6px;">
+    <label for="tag-filter">Filter by Tag:</label>
+    <select id="tag-filter">
+      <option value="">-- All Tags --</option>
+    </select>
+  </div>
+
   <div id="map"></div>
   <button id="legend-toggle">Hide Legend</button>
   <div id="legend-wrapper">
     <div id="legend"></div>
   </div>
 
+
+  
+  <div id="legend-wrapper">
+    <h4>Organizations</h4>
+    <div id="legend"></div>
+  </div>
+  
   <script src="script.js"></script>
 </body>
 </html>
