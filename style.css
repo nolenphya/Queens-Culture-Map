@@ -1,96 +1,115 @@
+/* General layout */
 body, html {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    overflow: hidden;
-  }
-  
-  #map {
-    width: 100vw;
-    height: 100vh;
-  }
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+}
 
-  .mapboxgl-popup-content img {
-    max-width: 100%;    /* Ensures image doesn't overflow the popup */
-    height: auto;       /* Maintains aspect ratio */
-    max-height: 250px;  /* Optional: Limits image height */
-    border-radius: 8px; /* Rounded corners for a clean look */
-    object-fit: cover;  /* Crops the image if needed to fill the frame */
-  }
+#map {
+  width: 100vw;
+  height: 100vh;
+}
 
-  #search-container {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 1;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 10px;
-    border-radius: 8px;
-  }
-  
-  #search-box {
-    width: 300px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
+/* Popup image styling */
+.mapboxgl-popup-content img {
+  max-width: 100%;
+  height: auto;
+  max-height: 250px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Search box container (optional if used) */
+#search-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* Search input */
+#search-box {
+  width: 300px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Buttons */
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+/* Legend container */
+#legend-wrapper {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  font-family: sans-serif;
+  font-size: 14px;
+  width: 220px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Hide legend content toggle */
+#legend.hidden {
+  display: none;
+}
+
+/* Toggle button */
+#legend-toggle {
+  margin-bottom: 8px;
+  cursor: pointer;
+  width: 100%;
+  background: #eee;
+  border: none;
+  padding: 6px;
+}
+
+/* Legend items */
+.legend-item {
+  padding: 5px;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.legend-item.hidden {
+  text-decoration: line-through;
+  color: gray;
+  opacity: 0.6;
+}
+
+/* Ensure custom markers respond to events */
+.custom-marker {
+  pointer-events: auto;
+}
+
+/* Mobile-friendly legend */
+@media (max-width: 600px) {
   #legend-wrapper {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 10;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 10px;
-    font-family: sans-serif;
-    font-size: 14px;
-    width: 220px;
-    max-height: 500px;
-    overflow-y: auto;
+    width: 90vw;
+    left: 5vw;
+    right: auto;
   }
-  
-  #legend.hidden {
-    display: none;
-  }
-  
-  #legend-toggle {
-    margin-bottom: 8px;
-    cursor: pointer;
-    width: 100%;
-    background: #eee;
-    border: none;
-    padding: 6px;
-  }
-  
-
-  #legend {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 10px;
-    max-height: 400px;
-    overflow-y: auto;
-    z-index: 10;
-    font-family: sans-serif;
-    font-size: 14px;
-    width: 220px;
-  }
-  
-  
-  
+}
