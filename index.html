@@ -4,74 +4,80 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mirror Magazine Community Map</title>
-  
+
   <!-- Mapbox GL JS -->
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
 
-<!-- Mapbox Geocoder Plugin -->
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
-<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css" />
+  <!-- Mapbox Geocoder -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" rel="stylesheet" />
 
-
-  <!-- Mapbox Search JS Web Framework -->
-  <script id="search-js" defer src="https://api.mapbox.com/search-js/v1.0.0/web.js"></script>
-  
   <!-- Papa Parse -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+    }
+    #map {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+    }
+    #legend-wrapper {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: white;
+      border: 1px solid #aaa;
+      padding: 10px;
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 1000;
+    }
+    #legend-toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #333;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .legend-item input[type="checkbox"] {
+      margin-right: 5px;
+    }
+    .legend-item span:first-of-type {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-
-
+  <div id="map"></div>
+  <button id="legend-toggle">Hide Legend</button>
   <div id="legend-wrapper">
-    <button id="legend-toggle">Hide Legend</button>
-    <div id="legend" class="map-legend"></div> <!-- ✅ Corrected -->
+    <div id="legend"></div>
   </div>
-  
-
-<style>
-  .map-legend {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: white;
-    border: 1px solid #aaa;
-    padding: 10px;
-    max-height: 300px;
-    overflow-y: auto;
-    font-family: sans-serif;
-    z-index: 1000;
-  }
-  .legend-item {
-    padding: 5px;
-    cursor: pointer;
-    user-select: none;
-  }
-  .legend-item.hidden {
-    text-decoration: line-through;
-    color: gray;
-    opacity: 0.6;
-  }
-  
-  #legend-toggle {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #333;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    z-index: 1001;
-  }
-
-
-</style>
-
 
   <script src="script.js"></script>
 </body>
