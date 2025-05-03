@@ -49,7 +49,10 @@ function createColorIcon(color) {
 function addMarkers(data) {
   allMarkers.forEach(marker => marker.remove());
   allMarkers = [];
-  Object.keys(tagGroups).forEach(tag => tagGroups[tag] = {}); // Reset tagGroups
+
+  // Reset tagGroups
+  Object.assign(tagGroups, {});
+
 
   data.forEach(row => {
     const lat = parseFloat(row.Latitude);
