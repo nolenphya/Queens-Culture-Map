@@ -70,9 +70,19 @@ button:hover {
 }
 
 /* Hide legend content toggle */
-#legend.hidden {
-  display: none;
+#legend {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+  max-height: 1000px; /* Set high enough for your content */
+  opacity: 1;
 }
+
+#legend.collapsed {
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
 
 /* Toggle button */
 #legend-toggle {

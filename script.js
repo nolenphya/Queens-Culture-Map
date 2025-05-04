@@ -149,8 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (toggleButton && legend) {
     toggleButton.addEventListener('click', () => {
-      const isHidden = legend.classList.toggle('hidden');
-      toggleButton.textContent = isHidden ? 'Show Legend' : 'Hide Legend';
+      const isCollapsed = legend.classList.toggle('collapsed');
+      toggleButton.textContent = isCollapsed ? 'Show Legend' : 'Hide Legend';
     });
   } else {
     console.warn('Legend toggle elements not found in DOM.');
