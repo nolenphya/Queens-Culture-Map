@@ -71,16 +71,15 @@ button:hover {
 
 /* Hide legend content toggle */
 #legend-content {
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-  max-height: 1000px;
-  opacity: 1;
-  overflow: hidden;
+  transition: opacity 0.3s ease;
 }
 
-#legend-content.collapsed {
-  max-height: 0;
+#legend-content[hidden] {
+  display: block; /* prevent layout shifts */
   opacity: 0;
   pointer-events: none;
+  height: 0;
+  overflow: hidden;
 }
 
 
