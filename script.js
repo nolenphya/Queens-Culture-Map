@@ -147,16 +147,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggleButton = document.getElementById('legend-toggle');
   const legend = document.getElementById('legend');
 
-  if (toggleButton && legend) {
-    toggleButton.addEventListener('click', () => {
-      const isCollapsed = legend.classList.toggle('collapsed');
-      toggleButton.textContent = isCollapsed ? 'Show Legend' : 'Hide Legend';
-    });
-  } else {
-    console.warn('Legend toggle elements not found in DOM.');
-  }
+  toggleButton.addEventListener('click', () => {
+    const isCollapsed = legend.classList.toggle('collapsed');
+    toggleButton.textContent = isCollapsed ? 'Show Legend' : 'Hide Legend';
+  });
 });
-
 
 // ✅ Start once map loads
 map.on('load', fetchData);
