@@ -148,9 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const legend = document.getElementById('legend');
 
   toggleButton.addEventListener('click', () => {
+    console.log('Legend toggle clicked!');
     const isCollapsed = legend.classList.toggle('collapsed');
     toggleButton.textContent = isCollapsed ? 'Show Legend' : 'Hide Legend';
-  });
+  });  
 });
 
 // ✅ Start once map loads
