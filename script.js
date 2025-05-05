@@ -145,14 +145,14 @@ function buildTagDropdown() {
 // ✅ Legend Toggle Button Handler
 document.addEventListener('DOMContentLoaded', () => {
   const toggleButton = document.getElementById('legend-toggle');
-  const legend = document.getElementById('legend');
+  const legendWrapper = document.getElementById('legend-wrapper');
 
   toggleButton.addEventListener('click', () => {
-    console.log('Legend toggle clicked!');
-    const isCollapsed = legend.classList.toggle('collapsed');
+    const isCollapsed = legendWrapper.classList.toggle('collapsed');
     toggleButton.textContent = isCollapsed ? 'Show Legend' : 'Hide Legend';
-  });  
+  });
 });
+
 
 // ✅ Start once map loads
 map.on('load', fetchData);
