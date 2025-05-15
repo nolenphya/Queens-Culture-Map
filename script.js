@@ -1,5 +1,3 @@
-
-
 // ✅ Mapbox Initialization
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
 const map = new mapboxgl.Map({
@@ -9,22 +7,20 @@ const map = new mapboxgl.Map({
   zoom: 10
 });
 
-// ✅ Geocoder (Search box on map)
+// ✅ Geocoder (search box)
 const geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
-  mapboxgl,
+  mapboxgl: mapboxgl,
   placeholder: 'Search for an address',
   marker: { color: 'red' },
-  proximity: { longitude: -74.006, latitude: 40.7128 },
+  proximity: {
+    longitude: -74.006,
+    latitude: 40.7128
+  },
   countries: 'us',
   limit: 5
 });
 map.addControl(geocoder);
-
-// ✅ Data structures
-let allMarkers = [];
-let orgMarkers = {};
-let uniqueTags = new Set();
 
 // ✅ Airtable config
 const AIRTABLE_API_KEY = 'patqKWGk60o2xQOhu.1dcd58a48040947ce3815a169a8bf856385f1d1df2c78924baf37b228a6a3591';
@@ -32,7 +28,12 @@ const BASE_ID = 'appQQN2nFdbttM2uY';
 const TABLE_NAME = 'tblgqyoE5TZUzQDKw';
 const AIRTABLE_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?view=Grid%20view`;
 
-// ✅ Fetch from Airtable
+// ✅ Data structures
+let allMarkers = [];
+let orgMarkers = {};
+let uniqueTags = new Set();
+
+// ✅ Fetch data from Airtable
 async function fetchAirtableData() {
   try {
     const response = await fetch(AIRTABLE_URL, {
@@ -40,21 +41,21 @@ async function fetchAirtableData() {
         Authorization: `Bearer ${AIRTABLE_API_KEY}`
       }
     });
-    if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
-    const data = await response.json();
-    const records = data.records.map(record => ({
-      id: record.id,
-      ...record.fields
-    }));
+
+    if (!response.ok) throw new Error('Airtable fetch failed');
+
+    const airtableData = await response.json();
+    const records = airtableData.records.map(record => record.fields);
+
     addMarkers(records);
-  } catch (err) {
-    console.error('Error fetching Airtable data:', err);
+  } catch (error) {
+    console.error('Error fetching Airtable data:', error);
   }
 }
 
-// ✅ Add markers to the map
+// ✅ Add Markers to Map
 async function addMarkers(data) {
-  allMarkers.forEach(m => m.remove());
+  allMarkers.forEach(marker => marker.remove());
   allMarkers = [];
   orgMarkers = {};
   uniqueTags.clear();
@@ -65,23 +66,32 @@ async function addMarkers(data) {
 
     if (isNaN(lat) || isNaN(lng)) {
       if (row.Address) {
-        const result = await geocodeAddress(row.Address);
-        if (result) {
-          lng = result[0];
-          lat = result[1];
+        const coords = await geocodeAddress(row.Address);
+        if (coords) {
+          [lng, lat] = coords;
         } else {
-          console.warn(`❌ Could not geocode: ${row.Address}`);
+          console.warn('No lat/lng or failed geocode for:', row);
           continue;
         }
       } else {
-        console.warn(`⚠️ Skipping record — no lat/lng or address:`, row["Org Name"] || 'Unnamed');
+        console.warn('No lat/lng or address for:', row);
         continue;
       }
     }
 
     const org = row["Org Name"] || "Unnamed";
-    const tags = (row["Tags"] || "").split(',').map(t => t.trim()).filter(Boolean);
+    const tags = Array.isArray(row.Tags)
+      ? row.Tags
+      : (typeof row.Tags === 'string' ? row.Tags.split(',').map(t => t.trim()) : []);
     tags.forEach(tag => uniqueTags.add(tag));
+
+    // Handle Airtable attachment field
+    let imageUrl = '';
+    if (Array.isArray(row["Image"]) && row["Image"].length > 0) {
+      imageUrl = row["Image"][0].url;
+    } else if (typeof row["Image"] === 'string') {
+      imageUrl = row["Image"];
+    }
 
     const popupHTML = `
       <div style="max-width: 300px;">
@@ -92,7 +102,7 @@ async function addMarkers(data) {
         ${tags.length ? `<p><strong>Tags:</strong><br>${tags.join(', ')}</p>` : ""}
         ${row["Website"] ? `<p><strong>Website:</strong><br><a href="${row["Website"]}" target="_blank">${row["Website"]}</a></p>` : ""}
         ${row["Social"] ? `<p><strong>Social:</strong><br>${row["Social"]}</p>` : ""}
-        ${row["Image"] ? `<img src="${row["Image"]}" style="width:100%; margin-top:10px; border-radius:6px;" />` : ""}
+        ${imageUrl ? `<img src="${imageUrl}" style="width:100%; margin-top:10px; border-radius:6px;" />` : ""}
       </div>
     `;
 
@@ -112,47 +122,48 @@ async function addMarkers(data) {
   buildTagDropdown();
 }
 
-// ✅ Geocode address using Mapbox
+// ✅ Geocode missing lat/lng
 async function geocodeAddress(address) {
-  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.features[0]?.center || null;
-  } catch (err) {
-    console.error('Geocode error:', err);
-    return null;
+  const encoded = encodeURIComponent(address);
+  const res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encoded}.json?access_token=${mapboxgl.accessToken}`);
+  if (!res.ok) return null;
+
+  const data = await res.json();
+  if (data.features && data.features.length > 0) {
+    return data.features[0].center;
   }
+  return null;
 }
 
-// ✅ Build legend
+// ✅ Legend By Organization
 function buildLegendByOrg() {
-  const legend = document.getElementById('legend');
-  legend.innerHTML = '';
+  const container = document.getElementById('legend');
+  container.innerHTML = '';
 
   Object.keys(orgMarkers).forEach(org => {
     const label = document.createElement('label');
     label.style.display = 'block';
+    label.style.marginBottom = '4px';
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = true;
+    checkbox.dataset.org = org;
 
     checkbox.addEventListener('change', () => {
-      const visible = checkbox.checked;
+      const show = checkbox.checked;
       orgMarkers[org].forEach(marker => {
-        marker.getElement().style.display = visible ? 'block' : 'none';
+        marker.getElement().style.display = show ? 'block' : 'none';
       });
     });
 
     label.appendChild(checkbox);
     label.appendChild(document.createTextNode(` ${org}`));
-    legend.appendChild(label);
+    container.appendChild(label);
   });
 }
 
-// ✅ Tag filter
+// ✅ Dropdown Filter by Tag
 function buildTagDropdown() {
   const dropdown = document.getElementById('tag-filter');
   dropdown.innerHTML = `<option value="">-- All Tags --</option>`;
@@ -166,23 +177,35 @@ function buildTagDropdown() {
 
   dropdown.addEventListener('change', () => {
     const selected = dropdown.value.toLowerCase();
+
     allMarkers.forEach(marker => {
-      const tags = (marker.rowData.Tags || "").toLowerCase();
-      marker.getElement().style.display = !selected || tags.includes(selected) ? 'block' : 'none';
+      let tags = marker.rowData.Tags || [];
+
+      if (typeof tags === 'string') {
+        tags = tags.split(',').map(t => t.trim().toLowerCase());
+      } else if (Array.isArray(tags)) {
+        tags = tags.map(t => t.toLowerCase());
+      }
+
+      const visible = !selected || tags.includes(selected);
+      marker.getElement().style.display = visible ? 'block' : 'none';
     });
   });
 }
 
-// ✅ Legend toggle
+// ✅ Toggle legend visibility
 document.addEventListener('DOMContentLoaded', () => {
   const toggleButton = document.getElementById('legend-toggle');
-  const legendWrapper = document.getElementById('legend-wrapper');
+  const legendContent = document.getElementById('legend');
 
-  toggleButton.addEventListener('click', () => {
-    const isHidden = legendWrapper.classList.toggle('collapsed');
-    toggleButton.textContent = isHidden ? 'Show Legend' : 'Hide Legend';
-  });
+  if (toggleButton && legendContent) {
+    toggleButton.addEventListener('click', () => {
+      const hidden = legendContent.hidden;
+      legendContent.hidden = !hidden;
+      toggleButton.textContent = hidden ? 'Hide Legend' : 'Show Legend';
+    });
+  }
 });
 
-// ✅ Load everything
+// ✅ Load when map is ready
 map.on('load', fetchAirtableData);
