@@ -7,7 +7,6 @@ const map = new mapboxgl.Map({
   zoom: 10
 });
 
-https://api.mapbox.com/geocoding/v5/mapbox.places/{query}.json?access_token=patqKWGk60o2xQOhu.1dcd58a48040947ce3815a169a8bf856385f1d1df2c78924baf37b228a6a3591
 
 // ✅ Geocoder (search box)
 const geocoder = new MapboxGeocoder({
@@ -48,8 +47,10 @@ async function fetchAirtableData() {
     if (!response.ok) throw new Error('Airtable fetch failed');
 
     const airtableData = await response.json();
-    const records = airtableData.records.map(record => record.fields);
-
+   const records = airtableData.records.map(record => ({
+  id: record.id,
+  fields: record.fields
+}));
     addMarkers(records); // Reuse your existing marker function
   } catch (error) {
     console.error('Error fetching Airtable data:', error);
@@ -188,14 +189,12 @@ function buildTagDropdown() {
 
 // ✅ Legend Toggle Button Handler
 document.addEventListener('DOMContentLoaded', () => {
-  const toggleButton = document.getElementById('legend-toggle');
-  const legendContent = document.getElementById('legend-content');
-
-  toggleButton.addEventListener('click', () => {
-    const isHidden = legendContent.hidden;
-    legendContent.hidden = !isHidden;
-    toggleButton.textContent = isHidden ? 'Hide Legend' : 'Show Legend';
-  });
+  const legend = document.getElementById('legend');
+toggleButton.addEventListener('click', () => {
+  const isHidden = legend.hidden;
+  legend.hidden = !isHidden;
+  toggleButton.textContent = isHidden ? 'Hide Legend' : 'Show Legend';
+});
 });
 
 
