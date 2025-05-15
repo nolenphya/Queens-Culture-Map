@@ -7,6 +7,8 @@ const map = new mapboxgl.Map({
   zoom: 10
 });
 
+https://api.mapbox.com/geocoding/v5/mapbox.places/{query}.json?access_token=patqKWGk60o2xQOhu.1dcd58a48040947ce3815a169a8bf856385f1d1df2c78924baf37b228a6a3591
+
 // ✅ Geocoder (search box)
 const geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
@@ -55,17 +57,32 @@ async function fetchAirtableData() {
 }
 
 // ✅ Add Markers to Map
-function addMarkers(data) {
-  // Clear previous markers
+async function addMarkers(data) {
   allMarkers.forEach(marker => marker.remove());
   allMarkers = [];
   orgMarkers = {};
   uniqueTags.clear();
 
-  data.forEach(row => {
-    const lat = parseFloat(row.Latitude);
-    const lng = parseFloat(row.Longitude);
-    if (isNaN(lat) || isNaN(lng)) return;
+  for (const row of data) {
+    let lat = parseFloat(row.Latitude);
+    let lng = parseFloat(row.Longitude);
+
+    // If missing lat/lng, try to geocode the address
+    if (isNaN(lat) || isNaN(lng)) {
+      if (row.Address) {
+        const geocoded = await geocodeAddress(row.Address);
+        if (geocoded) {
+          lng = geocoded[0];
+          lat = geocoded[1];
+        } else {
+          console.warn('Could not geocode:', row.Address);
+          continue;
+        }
+      } else {
+        console.warn('No lat/lng or address:', row);
+        continue;
+      }
+    }
 
     const org = row["Org Name"] || "Unnamed";
     const tags = (row["Tags"] || "").split(',').map(t => t.trim()).filter(Boolean);
@@ -94,11 +111,30 @@ function addMarkers(data) {
 
     if (!orgMarkers[org]) orgMarkers[org] = [];
     orgMarkers[org].push(marker);
-  });
+  }
 
   buildLegendByOrg();
   buildTagDropdown();
 }
+
+async function geocodeAddress(address) {
+  const encodedAddress = encodeURIComponent(address);
+  const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodedAddress}.json?access_token=${mapboxgl.accessToken}`);
+
+  if (!response.ok) {
+    console.error('Geocoding error:', response.status);
+    return null;
+  }
+
+  const data = await response.json();
+  if (data.features && data.features.length > 0) {
+    return data.features[0].center; // [lng, lat]
+  }
+
+  return null;
+}
+
+
 
 // ✅ Legend By Organization Name
 function buildLegendByOrg() {
