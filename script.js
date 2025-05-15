@@ -27,23 +27,31 @@ let allMarkers = [];
 let orgMarkers = {};
 let uniqueTags = new Set();
 
-// ✅ Fetch CSV from Google Sheets
-function fetchData() {
-  const sheetURL = 'https://docs.google.com/spreadsheets/d/14m6_RP2yfUjLirv8HC5xav8sIMKFVuT4BHW-vRZqB-Q/export?format=csv';
+// Airtable setup
+const AIRTABLE_API_KEY = 'patqKWGk60o2xQOhu.1dcd58a48040947ce3815a169a8bf856385f1d1df2c78924baf37b228a6a3591';
+const BASE_ID = 'appQQN2nFdbttM2uY';
+const TABLE_NAME = 'tblgqyoE5TZUzQDKw';
 
-  fetch(sheetURL)
-    .then(response => response.text())
-    .then(csvData => {
-      Papa.parse(csvData, {
-        header: true,
-        dynamicTyping: true,
-        complete: results => {
-          addMarkers(results.data);
-        },
-        error: err => console.error("CSV Parse Error:", err)
-      });
-    })
-    .catch(err => console.error("Fetch Error:", err));
+const AIRTABLE_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?view=Grid%20view`;
+
+// Fetch data from Airtable
+async function fetchAirtableData() {
+  try {
+    const response = await fetch(AIRTABLE_URL, {
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_API_KEY}`
+      }
+    });
+
+    if (!response.ok) throw new Error('Airtable fetch failed');
+
+    const airtableData = await response.json();
+    const records = airtableData.records.map(record => record.fields);
+
+    addMarkers(records); // Reuse your existing marker function
+  } catch (error) {
+    console.error('Error fetching Airtable data:', error);
+  }
 }
 
 // ✅ Add Markers to Map
@@ -157,4 +165,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 // ✅ Start once map loads
-map.on('load', fetchData);
+map.on('load', fetchAirtableData);
