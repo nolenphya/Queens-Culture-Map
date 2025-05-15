@@ -1,3 +1,5 @@
+
+
 // ✅ Mapbox Initialization
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
 const map = new mapboxgl.Map({
@@ -7,35 +9,30 @@ const map = new mapboxgl.Map({
   zoom: 10
 });
 
-
-// ✅ Geocoder (search box)
+// ✅ Geocoder (Search box on map)
 const geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
-  mapboxgl: mapboxgl,
+  mapboxgl,
   placeholder: 'Search for an address',
   marker: { color: 'red' },
-  proximity: {
-    longitude: -74.006,
-    latitude: 40.7128
-  },
+  proximity: { longitude: -74.006, latitude: 40.7128 },
   countries: 'us',
   limit: 5
 });
 map.addControl(geocoder);
 
-// ✅ Data Structures
+// ✅ Data structures
 let allMarkers = [];
 let orgMarkers = {};
 let uniqueTags = new Set();
 
-// Airtable setup
+// ✅ Airtable config
 const AIRTABLE_API_KEY = 'patqKWGk60o2xQOhu.1dcd58a48040947ce3815a169a8bf856385f1d1df2c78924baf37b228a6a3591';
 const BASE_ID = 'appQQN2nFdbttM2uY';
 const TABLE_NAME = 'tblgqyoE5TZUzQDKw';
-
 const AIRTABLE_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?view=Grid%20view`;
 
-// Fetch data from Airtable
+// ✅ Fetch from Airtable
 async function fetchAirtableData() {
   try {
     const response = await fetch(AIRTABLE_URL, {
@@ -43,23 +40,21 @@ async function fetchAirtableData() {
         Authorization: `Bearer ${AIRTABLE_API_KEY}`
       }
     });
-
-    if (!response.ok) throw new Error('Airtable fetch failed');
-
-    const airtableData = await response.json();
-   const records = airtableData.records.map(record => ({
-  id: record.id,
-  fields: record.fields
-}));
-    addMarkers(records); // Reuse your existing marker function
-  } catch (error) {
-    console.error('Error fetching Airtable data:', error);
+    if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
+    const data = await response.json();
+    const records = data.records.map(record => ({
+      id: record.id,
+      ...record.fields
+    }));
+    addMarkers(records);
+  } catch (err) {
+    console.error('Error fetching Airtable data:', err);
   }
 }
 
-// ✅ Add Markers to Map
+// ✅ Add markers to the map
 async function addMarkers(data) {
-  allMarkers.forEach(marker => marker.remove());
+  allMarkers.forEach(m => m.remove());
   allMarkers = [];
   orgMarkers = {};
   uniqueTags.clear();
@@ -68,19 +63,18 @@ async function addMarkers(data) {
     let lat = parseFloat(row.Latitude);
     let lng = parseFloat(row.Longitude);
 
-    // If missing lat/lng, try to geocode the address
     if (isNaN(lat) || isNaN(lng)) {
       if (row.Address) {
-        const geocoded = await geocodeAddress(row.Address);
-        if (geocoded) {
-          lng = geocoded[0];
-          lat = geocoded[1];
+        const result = await geocodeAddress(row.Address);
+        if (result) {
+          lng = result[0];
+          lat = result[1];
         } else {
-          console.warn('Could not geocode:', row.Address);
+          console.warn(`❌ Could not geocode: ${row.Address}`);
           continue;
         }
       } else {
-        console.warn('No lat/lng or address:', row);
+        console.warn(`⚠️ Skipping record — no lat/lng or address:`, row["Org Name"] || 'Unnamed');
         continue;
       }
     }
@@ -118,54 +112,47 @@ async function addMarkers(data) {
   buildTagDropdown();
 }
 
+// ✅ Geocode address using Mapbox
 async function geocodeAddress(address) {
-  const encodedAddress = encodeURIComponent(address);
-  const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodedAddress}.json?access_token=${mapboxgl.accessToken}`);
-
-  if (!response.ok) {
-    console.error('Geocoding error:', response.status);
+  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxgl.accessToken}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.features[0]?.center || null;
+  } catch (err) {
+    console.error('Geocode error:', err);
     return null;
   }
-
-  const data = await response.json();
-  if (data.features && data.features.length > 0) {
-    return data.features[0].center; // [lng, lat]
-  }
-
-  return null;
 }
 
-
-
-// ✅ Legend By Organization Name
+// ✅ Build legend
 function buildLegendByOrg() {
-  const container = document.getElementById('legend');
-  container.innerHTML = '';
+  const legend = document.getElementById('legend');
+  legend.innerHTML = '';
 
   Object.keys(orgMarkers).forEach(org => {
     const label = document.createElement('label');
     label.style.display = 'block';
-    label.style.marginBottom = '4px';
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = true;
-    checkbox.dataset.org = org;
 
     checkbox.addEventListener('change', () => {
-      const show = checkbox.checked;
+      const visible = checkbox.checked;
       orgMarkers[org].forEach(marker => {
-        marker.getElement().style.display = show ? 'block' : 'none';
+        marker.getElement().style.display = visible ? 'block' : 'none';
       });
     });
 
     label.appendChild(checkbox);
     label.appendChild(document.createTextNode(` ${org}`));
-    container.appendChild(label);
+    legend.appendChild(label);
   });
 }
 
-// ✅ Dropdown Menu for Tag Filtering
+// ✅ Tag filter
 function buildTagDropdown() {
   const dropdown = document.getElementById('tag-filter');
   dropdown.innerHTML = `<option value="">-- All Tags --</option>`;
@@ -178,26 +165,24 @@ function buildTagDropdown() {
   });
 
   dropdown.addEventListener('change', () => {
-    const selectedTag = dropdown.value.toLowerCase();
+    const selected = dropdown.value.toLowerCase();
     allMarkers.forEach(marker => {
       const tags = (marker.rowData.Tags || "").toLowerCase();
-      const visible = !selectedTag || tags.includes(selectedTag);
-      marker.getElement().style.display = visible ? 'block' : 'none';
+      marker.getElement().style.display = !selected || tags.includes(selected) ? 'block' : 'none';
     });
   });
 }
 
-// ✅ Legend Toggle Button Handler
+// ✅ Legend toggle
 document.addEventListener('DOMContentLoaded', () => {
-  const legend = document.getElementById('legend');
-toggleButton.addEventListener('click', () => {
-  const isHidden = legend.hidden;
-  legend.hidden = !isHidden;
-  toggleButton.textContent = isHidden ? 'Hide Legend' : 'Show Legend';
+  const toggleButton = document.getElementById('legend-toggle');
+  const legendWrapper = document.getElementById('legend-wrapper');
+
+  toggleButton.addEventListener('click', () => {
+    const isHidden = legendWrapper.classList.toggle('collapsed');
+    toggleButton.textContent = isHidden ? 'Show Legend' : 'Hide Legend';
+  });
 });
-});
 
-
-
-// ✅ Start once map loads
+// ✅ Load everything
 map.on('load', fetchAirtableData);
