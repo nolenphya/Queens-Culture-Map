@@ -23,8 +23,8 @@ const geocoder = new MapboxGeocoder({
 map.addControl(geocoder);
 
 // ✅ Airtable config
-const AIRTABLE_API_KEY = 'patqKWGk60o2xQOhu.1dcd58a48040947ce3815a169a8bf856385f1d1df2c78924baf37b228a6a3591';
-const BASE_ID = 'appQQN2nFdbttM2uY';
+const AIRTABLE_API_KEY = 'patVU2XRVZ6uiJvA8.5076600888577f61b245c3510979a1383c551c656673b03f012b0391bfdc7fdc';
+const BASE_ID = 'apppBx0a9hj0Z1ciw';
 const TABLE_NAME = 'tblgqyoE5TZUzQDKw';
 const AIRTABLE_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?view=Grid%20view`;
 
