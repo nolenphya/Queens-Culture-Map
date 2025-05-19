@@ -54,15 +54,72 @@ button:hover {
 }
 
 /* Legend container */
-#legend-wrapper ul {
-  list-style-type: disc;
-  margin: 4px 0 0 20px;
-  padding-left: 0;
+#legend-wrapper {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: white;
+  border: 1px solid #aaa;
+  padding: 10px 10px 10px 14px;
+  max-height: 500px;
+  overflow-y: auto;
+  width: 240px;
+  transition: transform 0.3s ease;
+  z-index: 1000;
 }
 
-#legend-wrapper li {
-  margin: 3px 0;
+#legend-wrapper.collapsed {
+  transform: translateX(-90%);
+  opacity: 0.7;
+  width: 20px;
+  padding: 0;
+  overflow: visible;
 }
+
+#legend-toggle {
+  position: absolute;
+  top: 8px;
+  right: -20px;
+  width: 20px;
+  height: 40px;
+  font-size: 16px;
+  border: none;
+  background: #333;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px 0 0 4px;
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+#legend-wrapper.collapsed #legend-toggle {
+  transform: rotate(180deg);
+}
+
+/* Tag group expand/collapse arrow */
+.tag-header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tag-header span.arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.tag-collapsed > .arrow {
+  transform: rotate(-90deg);
+}
+
+ul.tag-org-list {
+  list-style: disc;
+  margin: 4px 0 10px 18px;
+  padding: 0;
+}
+
 
 
 /* Hide legend content toggle */
@@ -80,15 +137,7 @@ button:hover {
 
 
 
-/* Toggle button */
-#legend-toggle {
-  margin-bottom: 8px;
-  cursor: pointer;
-  width: 100%;
-  background: #eee;
-  border: none;
-  padding: 6px;
-}
+
 
 /* Legend items */
 .legend-item {

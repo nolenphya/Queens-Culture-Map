@@ -165,7 +165,8 @@ function buildLegend() {
   const container = document.getElementById('legend');
   container.innerHTML = '';
 
-  const tagMap = {}; // tag -> list of { org, marker }
+  const tagMap = {};
+
   allMarkers.forEach(marker => {
     const org = marker.rowData["Org Name"] || "Unnamed Org";
     const tags = (marker.rowData["Tags"] || "").split(',').map(t => t.trim()).filter(Boolean);
@@ -178,76 +179,71 @@ function buildLegend() {
   Object.entries(tagMap).forEach(([tag, entries]) => {
     const tagColor = getColorFor(tag);
 
-    const tagSection = document.createElement('div');
-    tagSection.style.marginBottom = '10px';
-
-    // Tag-level checkbox
-    const tagLabel = document.createElement('label');
-    tagLabel.style.fontWeight = 'bold';
-    tagLabel.style.display = 'flex';
-    tagLabel.style.alignItems = 'center';
-
-    const tagCheckbox = document.createElement('input');
-    tagCheckbox.type = 'checkbox';
-    tagCheckbox.checked = true;
-
-    const swatch = document.createElement('span');
-    swatch.style.backgroundColor = tagColor;
-    swatch.style.width = '12px';
-    swatch.style.height = '12px';
-    swatch.style.borderRadius = '50%';
-    swatch.style.margin = '0 6px';
+    const section = document.createElement('div');
+    const header = document.createElement('div');
+    header.className = 'tag-header';
+    const arrow = document.createElement('span');
+    arrow.textContent = '▼';
+    arrow.className = 'arrow';
 
     const tagName = document.createElement('span');
     tagName.textContent = tag;
 
-    tagLabel.appendChild(tagCheckbox);
-    tagLabel.appendChild(swatch);
-    tagLabel.appendChild(tagName);
-    tagSection.appendChild(tagLabel);
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = true;
+    checkbox.style.marginLeft = 'auto';
 
-    // Org list under each tag
-    const orgList = document.createElement('ul');
-    orgList.style.margin = '6px 0 0 18px';
-    orgList.style.padding = '0';
-
-    entries.forEach(({ org, marker }) => {
-      const orgItem = document.createElement('li');
-      orgItem.textContent = org;
-      orgItem.style.fontSize = '13px';
-      orgItem.style.cursor = 'pointer';
-      orgItem.addEventListener('click', () => {
-        map.flyTo({ center: marker.getLngLat(), zoom: 14 });
-        marker.togglePopup();
-      });
-      orgList.appendChild(orgItem);
-    });
-
-    // Tag checkbox toggles all markers in the tag group
-    tagCheckbox.addEventListener('change', () => {
-      const visible = tagCheckbox.checked;
+    // Show/hide markers by tag
+    checkbox.addEventListener('change', () => {
+      const visible = checkbox.checked;
       entries.forEach(({ marker }) => {
         marker.getElement().style.display = visible ? 'block' : 'none';
       });
     });
 
-    tagSection.appendChild(orgList);
-    container.appendChild(tagSection);
+    // Collapse/expand orgs
+    const orgList = document.createElement('ul');
+    orgList.className = 'tag-org-list';
+    entries.forEach(({ org, marker }) => {
+      const li = document.createElement('li');
+      li.textContent = org;
+      li.style.cursor = 'pointer';
+      li.addEventListener('click', () => {
+        map.flyTo({ center: marker.getLngLat(), zoom: 14 });
+        marker.togglePopup();
+      });
+      orgList.appendChild(li);
+    });
+
+    let collapsed = false;
+    header.addEventListener('click', () => {
+      collapsed = !collapsed;
+      orgList.style.display = collapsed ? 'none' : 'block';
+      arrow.style.transform = collapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
+    });
+
+    header.appendChild(arrow);
+    header.appendChild(tagName);
+    header.appendChild(checkbox);
+    section.appendChild(header);
+    section.appendChild(orgList);
+    container.appendChild(section);
   });
 }
 
 
+
 // ✅ Legend Toggle
 document.addEventListener('DOMContentLoaded', () => {
-  const toggle = document.getElementById('legend-toggle');
-  const legend = document.getElementById('legend-wrapper');
-  if (toggle && legend) {
-    toggle.addEventListener('click', () => {
-      legend.classList.toggle('hidden');
-      toggle.textContent = legend.classList.contains('hidden') ? 'Show Legend' : 'Hide Legend';
-    });
-  }
+  const legendWrapper = document.getElementById('legend-wrapper');
+  const toggleButton = document.getElementById('legend-toggle');
+
+  toggleButton.addEventListener('click', () => {
+    legendWrapper.classList.toggle('collapsed');
+  });
 });
+
 
 // ✅ Init
 map.on('load', fetchAirtableData);
