@@ -165,64 +165,77 @@ function buildLegend() {
   const container = document.getElementById('legend');
   container.innerHTML = '';
 
-  Object.keys(orgMarkers).forEach(org => {
-    const color = getColorFor(org);
+  const tagMap = {}; // tag -> list of { org, marker }
+  allMarkers.forEach(marker => {
+    const org = marker.rowData["Org Name"] || "Unnamed Org";
+    const tags = (marker.rowData["Tags"] || "").split(',').map(t => t.trim()).filter(Boolean);
+    tags.forEach(tag => {
+      if (!tagMap[tag]) tagMap[tag] = [];
+      tagMap[tag].push({ org, marker });
+    });
+  });
 
-    const item = document.createElement('div');
-    item.className = 'legend-item';
-    item.style.display = 'flex';
-    item.style.alignItems = 'center';
-    item.style.marginBottom = '5px';
+  Object.entries(tagMap).forEach(([tag, entries]) => {
+    const tagColor = getColorFor(tag);
 
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = true;
-  checkbox.addEventListener('change', () => {
-      const visible = checkbox.checked;
-      orgMarkers[org].forEach(marker => {
+    const tagSection = document.createElement('div');
+    tagSection.style.marginBottom = '10px';
+
+    // Tag-level checkbox
+    const tagLabel = document.createElement('label');
+    tagLabel.style.fontWeight = 'bold';
+    tagLabel.style.display = 'flex';
+    tagLabel.style.alignItems = 'center';
+
+    const tagCheckbox = document.createElement('input');
+    tagCheckbox.type = 'checkbox';
+    tagCheckbox.checked = true;
+
+    const swatch = document.createElement('span');
+    swatch.style.backgroundColor = tagColor;
+    swatch.style.width = '12px';
+    swatch.style.height = '12px';
+    swatch.style.borderRadius = '50%';
+    swatch.style.margin = '0 6px';
+
+    const tagName = document.createElement('span');
+    tagName.textContent = tag;
+
+    tagLabel.appendChild(tagCheckbox);
+    tagLabel.appendChild(swatch);
+    tagLabel.appendChild(tagName);
+    tagSection.appendChild(tagLabel);
+
+    // Org list under each tag
+    const orgList = document.createElement('ul');
+    orgList.style.margin = '6px 0 0 18px';
+    orgList.style.padding = '0';
+
+    entries.forEach(({ org, marker }) => {
+      const orgItem = document.createElement('li');
+      orgItem.textContent = org;
+      orgItem.style.fontSize = '13px';
+      orgItem.style.cursor = 'pointer';
+      orgItem.addEventListener('click', () => {
+        map.flyTo({ center: marker.getLngLat(), zoom: 14 });
+        marker.togglePopup();
+      });
+      orgList.appendChild(orgItem);
+    });
+
+    // Tag checkbox toggles all markers in the tag group
+    tagCheckbox.addEventListener('change', () => {
+      const visible = tagCheckbox.checked;
+      entries.forEach(({ marker }) => {
         marker.getElement().style.display = visible ? 'block' : 'none';
       });
     });
 
-    const swatch = document.createElement('span');
-    swatch.style.backgroundColor = color;
-    swatch.style.width = '16px';
-    swatch.style.height = '16px';
-    swatch.style.borderRadius = '50%';
-    swatch.style.marginRight = '6px';
-
-    const label = document.createElement('span');
-    label.textContent = org;
-
-    item.appendChild(checkbox);
-    item.appendChild(swatch);
-    item.appendChild(label);
-    container.appendChild(item);
+    tagSection.appendChild(orgList);
+    container.appendChild(tagSection);
   });
 }
 
-// ✅ Tag Dropdown Filter
-function buildTagDropdown() {
-  const dropdown = document.getElementById('tag-filter');
-  if (!dropdown) return;
-
-  dropdown.innerHTML = `<option value="">-- All Tags --</option>`;
-  Array.from(uniqueTags).sort().forEach(tag => {
-    const option = document.createElement('option');
-    option.value = tag;
-    option.textContent = tag;
-    dropdown.appendChild(option);
-  });
-
-  dropdown.addEventListener('change', () => {
-    const selected = dropdown.value.toLowerCase();
-    allMarkers.forEach(marker => {
-      const tagString = (marker.rowData.Tags || "").toLowerCase();
-      const visible = !selected || tagString.includes(selected);
-      marker.getElement().style.display = visible ? 'block' : 'none';
-    });
-  });
-}
 
 // ✅ Legend Toggle
 document.addEventListener('DOMContentLoaded', () => {
