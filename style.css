@@ -1,180 +1,99 @@
-/* General layout */
-body, html {
+/* Base Layout */
+html, body {
   margin: 0;
   padding: 0;
   height: 100vh;
+  font-family: sans-serif;
   overflow: hidden;
 }
 
 #map {
   width: 100vw;
   height: 100vh;
+  position: relative;
 }
 
-/* Popup image styling */
-.mapboxgl-popup-content img {
-  max-width: 100%;
-  height: auto;
-  max-height: 250px;
-  border-radius: 8px;
-  object-fit: cover;
-}
-
-/* Search box container (optional if used) */
-#search-container {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 10px;
-  border-radius: 8px;
-}
-
-/* Search input */
-#search-box {
-  width: 300px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-/* Buttons */
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-/* Legend container */
+/* Legend Panel */
 #legend-wrapper {
   position: absolute;
   top: 10px;
-  left: 10px;
+  left: 0;
   background: white;
-  border: 1px solid #aaa;
-  padding: 10px 10px 10px 14px;
-  width: 25vh;
-  max-height: 45vh; /* Taller viewport space */
+  border-right: 1px solid #ccc;
+  padding: 10px;
+  width: 260px;
+  max-height: 90vh;
   overflow-y: auto;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
   z-index: 1000;
 }
 
+#legend-wrapper.collapsed {
+  transform: translateX(-100%);
+}
 
+/* Legend Toggle Button */
 #legend-toggle {
   position: absolute;
   top: 10px;
-  left: 300px; /* Adjust to match the width of your legend box */
-  width: 30px;
-  height: 40px;
-  font-size: 18px;
+  left: 290px;
   background: #333;
   color: white;
   border: none;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 6px 6px 0;
+  width: 28px;
+  height: 40px;
   cursor: pointer;
   z-index: 1001;
+  font-size: 16px;
   transition: transform 0.3s ease;
-}
-
-#legend-wrapper {
-  overflow: hidden; /* Ensures content doesn't spill */
-}
-
-#legend-wrapper.collapsed {
-  transform: translateX(-90%);
-  width: 40px;
-  padding: 0;
-  overflow: visible;
-  background: transparent;
-  border: none;
 }
 
 #legend-wrapper.collapsed + #legend-toggle {
-  transform: rotate(180deg);
-  left: 0;
+  transform: translateX(-240px) rotate(180deg);
 }
 
-
-/* Tag group expand/collapse arrow */
+/* Tag Headers */
 .tag-header {
   display: flex;
   align-items: center;
-  gap: 5px;
-  cursor: pointer;
   font-weight: bold;
-}
-
-.tag-header span.arrow {
-  display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-.tag-collapsed > .arrow {
-  transform: rotate(-90deg);
-}
-
-ul.tag-org-list {
-  list-style: disc;
-  margin: 4px 0 10px 18px;
-  padding: 0;
-}
-
-
-
-/* Hide legend content toggle */
-#legend-content {
-  transition: opacity 0.3s ease;
-}
-
-#legend-content[hidden] {
-  display: block; /* prevent layout shifts */
-  opacity: 0;
-  pointer-events: none;
-  height: 0;
-  overflow: hidden;
-}
-
-#legend-wrapper.collapsed #legend-content {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Legend items */
-.legend-item {
-  padding: 5px;
+  margin-top: 10px;
   cursor: pointer;
-  user-select: none;
-  display: flex;
-  align-items: center;
   gap: 8px;
 }
 
-.legend-item.hidden {
-  text-decoration: line-through;
-  color: gray;
-  opacity: 0.6;
+.tag-header img {
+  width: 18px;
+  height: 24px;
 }
 
-
-/* Ensure custom markers respond to events */
-.custom-marker {
-  pointer-events: auto;
+/* Org List */
+.tag-org-list {
+  list-style: disc;
+  padding-left: 22px;
+  margin: 4px 0 10px;
 }
 
-/* Mobile-friendly legend */
+.tag-org-list li {
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+/* Responsive */
 @media (max-width: 600px) {
   #legend-wrapper {
-    width: 90vw;
-    left: 5vw;
-    right: auto;
+    width: 80vw;
+    max-height: 60vh;
+  }
+
+  #legend-toggle {
+    left: 80vw;
+  }
+
+  #legend-wrapper.collapsed + #legend-toggle {
+    transform: translateX(-80vw) rotate(180deg);
   }
 }
