@@ -61,8 +61,8 @@ button:hover {
   background: white;
   border: 1px solid #aaa;
   padding: 10px 10px 10px 14px;
-  width: 240px;
-  max-height: 90vh; /* Taller viewport space */
+  width: 270px;
+  max-height: 45vh; /* Taller viewport space */
   overflow-y: auto;
   transition: transform 0.3s ease;
   z-index: 1000;
