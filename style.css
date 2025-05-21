@@ -61,12 +61,13 @@ button:hover {
   background: white;
   border: 1px solid #aaa;
   padding: 10px 10px 10px 14px;
-  max-height: 500px;
-  overflow-y: auto;
   width: 240px;
+  max-height: 90vh; /* Taller viewport space */
+  overflow-y: auto;
   transition: transform 0.3s ease;
   z-index: 1000;
 }
+
 
 #legend-toggle {
   position: absolute;
@@ -137,6 +138,9 @@ ul.tag-org-list {
   overflow: hidden;
 }
 
+#legend-wrapper.collapsed #legend-content {
+  display: none;
+}
 
 /* Legend items */
 .legend-item {
