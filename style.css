@@ -68,15 +68,6 @@ button:hover {
   z-index: 1000;
 }
 
-#legend-wrapper.collapsed {
-  transform: translateX(-90%);
-  width: 40px;
-  padding: 0;
-  overflow: visible;
-  background: transparent;
-  border: none;
-}
-
 #legend-toggle {
   position: absolute;
   top: 8px;
@@ -91,6 +82,15 @@ button:hover {
   border-radius: 4px 0 0 4px;
   transition: transform 0.3s ease;
   z-index: 1001;
+}
+
+#legend-wrapper.collapsed {
+  transform: translateX(-90%);
+  width: 40px;
+  padding: 0;
+  overflow: visible;
+  background: transparent;
+  border: none;
 }
 
 #legend-wrapper.collapsed #legend-toggle {
