@@ -70,10 +70,11 @@ button:hover {
 
 #legend-wrapper.collapsed {
   transform: translateX(-90%);
-  opacity: 0.7;
-  width: 20px;
+  width: 40px;
   padding: 0;
   overflow: visible;
+  background: transparent;
+  border: none;
 }
 
 #legend-toggle {
@@ -88,13 +89,14 @@ button:hover {
   color: white;
   cursor: pointer;
   border-radius: 4px 0 0 4px;
-  transform: rotate(0deg);
   transition: transform 0.3s ease;
+  z-index: 1001;
 }
 
 #legend-wrapper.collapsed #legend-toggle {
   transform: rotate(180deg);
 }
+
 
 /* Tag group expand/collapse arrow */
 .tag-header {

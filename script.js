@@ -221,13 +221,15 @@ function buildLegend() {
 
 // ✅ Legend Toggle Button
 document.addEventListener('DOMContentLoaded', () => {
-  const toggle = document.getElementById('legend-toggle');
-  const wrapper = document.getElementById('legend-wrapper');
-  toggle.addEventListener('click', () => {
-    wrapper.classList.toggle('collapsed');
-    toggle.textContent = wrapper.classList.contains('collapsed') ? '▶' : '▼';
-  });
+  const toggleButton = document.getElementById('legend-toggle');
+  const legendWrapper = document.getElementById('legend-wrapper');
+
+toggleButton.addEventListener('click', () => {
+  legendWrapper.classList.toggle('collapsed');
+  toggleButton.textContent = legendWrapper.classList.contains('collapsed') ? '❯' : '❮';
 });
+});
+
 
 // ✅ Load Map
 map.on('load', fetchAirtableData);
