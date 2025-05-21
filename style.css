@@ -72,7 +72,7 @@ button:hover {
 #legend-toggle {
   position: absolute;
   top: 10px;
-  left: 250px; /* Adjust to match the width of your legend box */
+  left: 200px; /* Adjust to match the width of your legend box */
   width: 30px;
   height: 40px;
   font-size: 18px;
@@ -141,7 +141,8 @@ ul.tag-org-list {
 }
 
 #legend-wrapper.collapsed #legend-content {
-  display: none;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Legend items */
