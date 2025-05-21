@@ -61,7 +61,7 @@ button:hover {
   background: white;
   border: 1px solid #aaa;
   padding: 10px 10px 10px 14px;
-  width: 270px;
+  width: 300px;
   max-height: 45vh; /* Taller viewport space */
   overflow-y: auto;
   transition: transform 0.3s ease;
