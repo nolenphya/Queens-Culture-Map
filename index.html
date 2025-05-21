@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mirror Magazine Community Map</title>
+  <title>Queens Cultural Venues Map</title>
 
   <!-- Mapbox GL JS -->
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
@@ -16,77 +16,26 @@
   <!-- Papa Parse -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: sans-serif;
-    }
-    #map {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 100%;
-    }
-    #legend-wrapper {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: white;
-      border: 1px solid #aaa;
-      padding: 10px;
-      max-height: 300px;
-      overflow-y: auto;
-      z-index: 1000;
-    }
-    #legend-toggle {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #333;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      z-index: 1001;
-    }
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-    .legend-item input[type="checkbox"] {
-      margin-right: 5px;
-    }
-    .legend-item span:first-of-type {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
+  <!-- Your CSS file -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <!-- Map Container -->
   <div id="map"></div>
 
-  <!-- Filter Dropdown -->
-<div id="legend-wrapper">
-  <button id="legend-toggle" title="Toggle Legend">❮</button>
-  <div id="legend-content">
-    <div id="legend"></div>
-  </div>
-</div>
+  <!-- Legend Panel -->
+  <div id="legend-wrapper">
+    <!-- Toggle Button (always visible) -->
+    <button id="legend-toggle" title="Toggle Legend">❮</button>
 
-  <!-- JavaScript -->
+    <!-- Collapsible Content -->
+    <div id="legend-content">
+      <div id="legend"></div>
+    </div>
+  </div>
+
+  <!-- JS Script -->
   <script src="script.js"></script>
 </body>
-
 </html>
