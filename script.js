@@ -1,10 +1,10 @@
 
-        // ✅ Mapbox Initialization
+// ✅ Mapbox Initialization
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/flushingtownhall/cma3bhpb4000l01qwf955dtqx',
-  center: [-73.94, 40.73], // Centered on Queens
+  center: [-73.94, 40.73], // Queens, NY
   zoom: 11
 });
 
@@ -25,7 +25,7 @@ const colorPalette = [
   '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000'
 ];
 
-// ✅ Utility: Assign unique color to org or tag
+// ✅ Color Utilities
 function getColorFor(key) {
   if (!colorMap[key]) {
     const idx = Object.keys(colorMap).length % colorPalette.length;
@@ -34,29 +34,22 @@ function getColorFor(key) {
   return colorMap[key];
 }
 
-// ✅ Utility: Create colored marker icon
-function createColoredMarker(color) {
-  const svg = encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 24 24" fill="${color}">
+function createColoredMarkerSVG(color) {
+  return encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 24" fill="${color}">
       <path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/>
     </svg>
   `);
-  return `data:image/svg+xml,${svg}`;
 }
 
 // ✅ Fetch and Process Airtable Data
 async function fetchAirtableData() {
   try {
     const response = await fetch(`${AIRTABLE_URL}?view=Grid%20view`, {
-      headers: {
-        Authorization: `Bearer ${AIRTABLE_API_KEY}`
-      }
+      headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
     });
     const json = await response.json();
-    const records = json.records.map(rec => ({
-      id: rec.id,
-      ...rec.fields
-    }));
+    const records = json.records.map(rec => ({ id: rec.id, ...rec.fields }));
     addMarkers(records);
   } catch (err) {
     console.error("Airtable Fetch Error:", err);
@@ -82,12 +75,7 @@ async function updateAirtableLatLng(recordId, lat, lng) {
       Authorization: `Bearer ${AIRTABLE_API_KEY}`,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({
-      fields: {
-        Latitude: lat,
-        Longitude: lng
-      }
-    })
+    body: JSON.stringify({ fields: { Latitude: lat, Longitude: lng } })
   });
 }
 
@@ -102,7 +90,6 @@ async function addMarkers(data) {
     let lat = parseFloat(row.Latitude);
     let lng = parseFloat(row.Longitude);
 
-    // If lat/lng missing, try geocoding
     if (isNaN(lat) || isNaN(lng)) {
       if (row.Address) {
         const coords = await geocodeAddress(row.Address);
@@ -111,7 +98,7 @@ async function addMarkers(data) {
           lat = coords[1];
           await updateAirtableLatLng(row.id, lat, lng);
         } else {
-          console.warn('Failed to geocode:', row.Address);
+          console.warn('Geocoding failed:', row.Address);
           continue;
         }
       } else {
@@ -139,7 +126,7 @@ async function addMarkers(data) {
     `;
 
     const markerEl = document.createElement('div');
-    markerEl.style.backgroundImage = `url('${createColoredMarker(tagColor)}')`;
+    markerEl.style.backgroundImage = `url('data:image/svg+xml,${createColoredMarkerSVG(tagColor)}')`;
     markerEl.style.width = '30px';
     markerEl.style.height = '40px';
     markerEl.style.backgroundSize = 'contain';
@@ -152,60 +139,61 @@ async function addMarkers(data) {
     marker.rowData = row;
     allMarkers.push(marker);
 
-    if (!orgMarkers[org]) orgMarkers[org] = [];
-    orgMarkers[org].push(marker);
+    tags.forEach(tag => {
+      if (!orgMarkers[tag]) orgMarkers[tag] = [];
+      orgMarkers[tag].push(marker);
+    });
   }
 
   buildLegend();
-  buildTagDropdown();
 }
 
-// ✅ Legend UI
+// ✅ Build Collapsible Legend with Colored Pins
 function buildLegend() {
   const container = document.getElementById('legend');
   container.innerHTML = '';
 
-  const tagMap = {};
-
-  allMarkers.forEach(marker => {
-    const org = marker.rowData["Org Name"] || "Unnamed Org";
-    const tags = (marker.rowData["Tags"] || "").split(',').map(t => t.trim()).filter(Boolean);
-    tags.forEach(tag => {
-      if (!tagMap[tag]) tagMap[tag] = [];
-      tagMap[tag].push({ org, marker });
-    });
-  });
-
-  Object.entries(tagMap).forEach(([tag, entries]) => {
-    const tagColor = getColorFor(tag);
+  Object.entries(orgMarkers).forEach(([tag, markers]) => {
+    const color = getColorFor(tag);
 
     const section = document.createElement('div');
+    section.style.marginBottom = '10px';
+
+    // Header with colored pin
     const header = document.createElement('div');
     header.className = 'tag-header';
-    const arrow = document.createElement('span');
-    arrow.textContent = '▼';
-    arrow.className = 'arrow';
+    header.style.display = 'flex';
+    header.style.alignItems = 'center';
+    header.style.cursor = 'pointer';
 
-    const tagName = document.createElement('span');
-    tagName.textContent = tag;
+    const icon = document.createElement('img');
+    icon.src = `data:image/svg+xml,${createColoredMarkerSVG(color)}`;
+    icon.style.width = '18px';
+    icon.style.marginRight = '6px';
+
+    const label = document.createElement('span');
+    label.textContent = tag;
+    label.style.flexGrow = '1';
 
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.checked = true;
-    checkbox.style.marginLeft = 'auto';
+    checkbox.style.marginLeft = '6px';
 
-    // Show/hide markers by tag
+    // Toggle visibility
     checkbox.addEventListener('change', () => {
       const visible = checkbox.checked;
-      entries.forEach(({ marker }) => {
+      markers.forEach(marker => {
         marker.getElement().style.display = visible ? 'block' : 'none';
       });
     });
 
-    // Collapse/expand orgs
-    const orgList = document.createElement('ul');
-    orgList.className = 'tag-org-list';
-    entries.forEach(({ org, marker }) => {
+    // Collapsible
+    const list = document.createElement('ul');
+    list.className = 'tag-org-list';
+    list.style.marginLeft = '20px';
+    markers.forEach(marker => {
+      const org = marker.rowData["Org Name"] || "Unnamed";
       const li = document.createElement('li');
       li.textContent = org;
       li.style.cursor = 'pointer';
@@ -213,37 +201,33 @@ function buildLegend() {
         map.flyTo({ center: marker.getLngLat(), zoom: 14 });
         marker.togglePopup();
       });
-      orgList.appendChild(li);
+      list.appendChild(li);
     });
 
     let collapsed = false;
     header.addEventListener('click', () => {
       collapsed = !collapsed;
-      orgList.style.display = collapsed ? 'none' : 'block';
-      arrow.style.transform = collapsed ? 'rotate(-90deg)' : 'rotate(0deg)';
+      list.style.display = collapsed ? 'none' : 'block';
     });
 
-    header.appendChild(arrow);
-    header.appendChild(tagName);
+    header.appendChild(icon);
+    header.appendChild(label);
     header.appendChild(checkbox);
     section.appendChild(header);
-    section.appendChild(orgList);
+    section.appendChild(list);
     container.appendChild(section);
   });
 }
 
-
-
-// ✅ Legend Toggle
+// ✅ Legend Toggle Button
 document.addEventListener('DOMContentLoaded', () => {
-  const legendWrapper = document.getElementById('legend-wrapper');
-  const toggleButton = document.getElementById('legend-toggle');
-
-  toggleButton.addEventListener('click', () => {
-    legendWrapper.classList.toggle('collapsed');
+  const toggle = document.getElementById('legend-toggle');
+  const wrapper = document.getElementById('legend-wrapper');
+  toggle.addEventListener('click', () => {
+    wrapper.classList.toggle('collapsed');
+    toggle.textContent = wrapper.classList.contains('collapsed') ? '▶' : '▼';
   });
 });
 
-
-// ✅ Init
+// ✅ Load Map
 map.on('load', fetchAirtableData);
