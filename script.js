@@ -224,10 +224,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggleButton = document.getElementById('legend-toggle');
   const legendWrapper = document.getElementById('legend-wrapper');
 
-toggleButton.addEventListener('click', () => {
-  legendWrapper.classList.toggle('collapsed');
-  toggleButton.textContent = legendWrapper.classList.contains('collapsed') ? '❯' : '❮';
-});
+  toggleButton.addEventListener('click', () => {
+    legendWrapper.classList.toggle('collapsed');
+    toggleButton.textContent = legendWrapper.classList.contains('collapsed') ? '❯' : '❮';
+  });
 });
 
 
