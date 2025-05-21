@@ -72,7 +72,7 @@ button:hover {
 #legend-toggle {
   position: absolute;
   top: 10px;
-  left: 200px; /* Adjust to match the width of your legend box */
+  left: 300px; /* Adjust to match the width of your legend box */
   width: 30px;
   height: 40px;
   font-size: 18px;
@@ -85,6 +85,9 @@ button:hover {
   transition: transform 0.3s ease;
 }
 
+#legend-wrapper {
+  overflow: hidden; /* Ensures content doesn't spill */
+}
 
 #legend-wrapper.collapsed {
   transform: translateX(-90%);
