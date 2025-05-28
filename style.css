@@ -97,3 +97,23 @@ html, body {
     transform: translateX(-80vw) rotate(180deg);
   }
 }
+
+.mapboxgl-popup-content {
+  max-width: 300px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  font-family: sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.mapboxgl-popup-content a {
+  color: #007bff;
+  word-break: break-word;
+  text-decoration: underline;
+}
+
+.mapboxgl-popup-content p {
+  margin: 0.3em 0;
+}
