@@ -99,6 +99,7 @@ async function addMarkers(data) {
       <div style="max-width: 300px;">
         <h3>${org}</h3>
         ${row.Image ? `<img src="${row.ImageTest}" style="width:100%; margin-top:8px; border-radius:6px;" />` : ""}
+        console.log("Image URL:", row.Image);
         ${row.Address ? `<p><b>Address:</b><br>${row.Address}</p>` : ""}
         ${row.Email ? `<p><b>Email:</b><br><a href="mailto:${row.Email}">${row.Email}</a></p>` : ""}
         ${row.Phone ? `<p><b>Phone:</b><br>${row.Phone}</p>` : ""}
