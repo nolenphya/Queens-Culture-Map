@@ -98,7 +98,7 @@ async function addMarkers(data) {
     const popupHTML = `
       <div style="max-width: 300px;">
         <h3>${org}</h3>
-        ${row.Image ? `<img src="${row.ImageTest}" style="width:100%; margin-top:8px; border-radius:6px;" />` : ""}
+        ${row.Image ? `<img src="${row.Image}" style="width:100%; margin-top:8px; border-radius:6px;" />` : ""}
       
         ${row.Address ? `<p><b>Address:</b><br>${row.Address}</p>` : ""}
         ${row.Email ? `<p><b>Email:</b><br><a href="mailto:${row.Email}">${row.Email}</a></p>` : ""}
