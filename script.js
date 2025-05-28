@@ -95,11 +95,13 @@ async function addMarkers(data) {
     const primaryTag = tags[0] || "Uncategorized";
     const color = getColorFor(primaryTag);
 
+
+    const imageUrl = Array.isArray(row.Image) ? row.Image[0]?.url : row.Image;
+
     const popupHTML = `
       <div style="max-width: 300px;">
         <h3>${org}</h3>
-        ${row.Image ? `<img src="${row.Image}" style="width:100%; margin-top:8px; border-radius:6px;" />` : ""}
-      
+        ${imageUrl ? `<img src="${imageUrl}" style="width:100%; margin-top:8px; border-radius:6px;" />` : ""}
         ${row.Address ? `<p><b>Address:</b><br>${row.Address}</p>` : ""}
         ${row.Email ? `<p><b>Email:</b><br><a href="mailto:${row.Email}">${row.Email}</a></p>` : ""}
         ${row.Phone ? `<p><b>Phone:</b><br>${row.Phone}</p>` : ""}
