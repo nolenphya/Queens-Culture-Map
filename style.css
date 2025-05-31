@@ -1,119 +1,80 @@
-/* Base Layout */
-html, body {
+body, html {
   margin: 0;
   padding: 0;
-  height: 100vh;
-  font-family: sans-serif;
-  overflow: hidden;
+  height: 100%;
 }
 
 #map {
-  width: 100vw;
-  height: 100vh;
-  position: relative;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
 }
 
 /* Legend Panel */
-#legend-wrapper {
+#legend-panel {
   position: absolute;
-  top: 10px;
-  left: 0;
-  background: white;
-  border-right: 1px solid #ccc;
-  padding: 10px;
-  width: 260px;
-  max-height: 30vh;
+  top: 20px;
+  left: 20px;
+  width: 270px;
+  max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 12px;
+  font-family: sans-serif;
+  font-size: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
 
-#legend-wrapper.collapsed {
-  transform: translateX(-100%);
-}
-
-/* Legend Toggle Button */
-#legend-toggle {
-  position: absolute;
-  top: 10px;
-  left: 300px;
-  background: #333;
-  color: white;
-  border: none;
-  border-radius: 0 6px 6px 0;
-  width: 28px;
-  height: 40px;
-  cursor: pointer;
-  z-index: 1001;
-  font-size: 16px;
-  transition: transform 0.3s ease;
-}
-
-#legend-wrapper.collapsed + #legend-toggle {
-  transform: translateX(-240px) rotate(180deg);
-}
-
-/* Tag Headers */
-.tag-header {
+.legend-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   font-weight: bold;
-  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.legend-header button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
   cursor: pointer;
-  gap: 8px;
 }
 
-.tag-header img {
-  width: 18px;
-  height: 24px;
+.legend-category {
+  margin-bottom: 10px;
 }
 
-/* Org List */
-.tag-org-list {
-  list-style: disc;
-  padding-left: 22px;
-  margin: 4px 0 10px;
-}
-
-.tag-org-list li {
+.legend-category h4 {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  font-size: 14px;
   cursor: pointer;
-  font-size: 14px;
-  margin-bottom: 4px;
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  #legend-wrapper {
-    width: 80vw;
-    max-height: 60vh;
-  }
-
-  #legend-toggle {
-    left: 80vw;
-  }
-
-  #legend-wrapper.collapsed + #legend-toggle {
-    transform: translateX(-80vw) rotate(180deg);
-  }
+.legend-org-list {
+  list-style: none;
+  margin: 6px 0 0 12px;
+  padding: 0;
 }
 
-.mapboxgl-popup-content {
-  max-width: 300px;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  white-space: normal;
-  font-family: sans-serif;
-  font-size: 14px;
-  line-height: 1.4;
+.legend-org-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  margin: 3px 0;
 }
 
-.mapboxgl-popup-content a {
-  color: #007bff;
-  word-break: break-word;
-  text-decoration: underline;
-}
-
-.mapboxgl-popup-content p {
-  margin: 0.3em 0;
+.legend-color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
 }

@@ -5,100 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Queens Culture Map</title>
 
-  <!-- Mapbox CSS/JS -->
+  <!-- Mapbox -->
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet"/>
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
 
-  <!-- PapaParse -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-
-  <!-- Custom styles -->
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      overflow: hidden;
-      font-family: sans-serif;
-    }
-
-    #map {
-      width: 100vw;
-      height: 100vh;
-    }
-
-    #legend-wrapper {
-      position: absolute;
-      top: 10px;
-      left: 0;
-      background: white;
-      border-right: 1px solid #ccc;
-      padding: 10px;
-      max-height: 90vh;
-      overflow-y: auto;
-      width: 260px;
-      transition: transform 0.3s ease;
-      z-index: 1000;
-    }
-
-    #legend-wrapper.collapsed {
-      transform: translateX(-100%);
-    }
-
-    #legend-toggle {
-      position: absolute;
-      top: 10px;
-      left: 260px;
-      z-index: 1001;
-      background: #333;
-      color: white;
-      border: none;
-      width: 28px;
-      height: 40px;
-      border-radius: 0 6px 6px 0;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    #legend-wrapper.collapsed + #legend-toggle {
-      transform: translateX(-240px) rotate(180deg);
-    }
-
-    .tag-header {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      font-weight: bold;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .tag-org-list {
-      list-style: disc;
-      margin-left: 20px;
-      margin-top: 4px;
-      margin-bottom: 10px;
-    }
-
-    .tag-org-list li {
-      cursor: pointer;
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-  </style>
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
+  <!-- Map -->
   <div id="map"></div>
 
-  <!-- Legend Sidebar -->
-  <div id="legend-wrapper">
-    <div id="legend-content">
-      <div id="legend"></div>
+  <!-- Legend -->
+  <div id="legend-panel">
+    <div class="legend-header">
+      <span>Filter by Category</span>
+      <button id="reset-filters">Reset</button>
     </div>
+    <div id="legend-content"></div>
   </div>
-  <button id="legend-toggle">❮</button>
 
+  <!-- JS -->
   <script src="script.js"></script>
 </body>
 </html>
