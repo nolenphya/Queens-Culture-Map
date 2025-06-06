@@ -10,8 +10,8 @@ const map = new mapboxgl.Map({
 
 // Airtable Setup
 const AIRTABLE_API_KEY = 'patVU2XRVZ6uiJvA8.5076600888577f61b245c3510979a1383c551c656673b03f012b0391bfdc7fdc';
-const BASE_ID = 'apppBx0a9hj0Z1ciw';
-const TABLE_NAME = 'tblgqyoE5TZUzQDKw';
+const BASE_ID = 'apph04Z2gcYOSx8Qm';
+const TABLE_NAME = 'tblr4J8Yw9bgmN26V';
 const AIRTABLE_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
 
 // Globals
