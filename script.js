@@ -1,4 +1,3 @@
-
 // Mapbox Setup
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
 const map = new mapboxgl.Map({
@@ -41,17 +40,65 @@ function createColoredMarkerSVG(color) {
   `);
 }
 
-// Fetch Data
+// Fetch and enrich data
 async function fetchData() {
   const res = await fetch(`${AIRTABLE_URL}?view=Grid%20view`, {
     headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
   });
+
   const json = await res.json();
-  const records = json.records.map(rec => ({ id: rec.id, ...rec.fields }));
-  createMarkers(records);
+  const rawRecords = json.records.map(rec => ({ id: rec.id, ...rec.fields }));
+
+  const enrichedRecords = await Promise.all(
+    rawRecords.map(async (record) => {
+      const hasLatLng = parseFloat(record.Latitude) && parseFloat(record.Longitude);
+      return hasLatLng ? record : await geocodeAndSaveMissingCoords(record);
+    })
+  );
+
+  createMarkers(enrichedRecords.filter(Boolean));
 }
 
-// Create Markers
+// Geocode missing coordinates
+async function geocodeAndSaveMissingCoords(record) {
+  if (!record.Address) return null;
+
+  const query = encodeURIComponent(record.Address);
+  const geocodeUrl = `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${mapboxgl.accessToken}`;
+
+  try {
+    const res = await fetch(geocodeUrl);
+    const json = await res.json();
+
+    if (!json.features.length) return null;
+
+    const [lng, lat] = json.features[0].center;
+
+    // Save back to Airtable
+    await fetch(`${AIRTABLE_URL}/${record.id}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        fields: {
+          Latitude: lat,
+          Longitude: lng
+        }
+      })
+    });
+
+    record.Latitude = lat;
+    record.Longitude = lng;
+    return record;
+  } catch (error) {
+    console.error('Geocoding failed for:', record.Address, error);
+    return null;
+  }
+}
+
+// Create markers
 function createMarkers(data) {
   allMarkers.forEach(m => m.remove());
   allMarkers = [];
@@ -98,7 +145,7 @@ function createMarkers(data) {
   buildLegend(tagGroups);
 }
 
-// Build ArcGIS-style Filter Legend
+// Build filter legend
 function buildLegend(tagGroups) {
   const container = document.getElementById('legend-content');
   container.innerHTML = '';
@@ -159,4 +206,5 @@ function buildLegend(tagGroups) {
   });
 }
 
+// Load map with data
 map.on('load', fetchData);
