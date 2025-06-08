@@ -145,6 +145,31 @@ function createMarkers(data) {
   buildLegend(tagGroups);
 }
 
+document.getElementById('search-input').addEventListener('keydown', async (e) => {
+  if (e.key === 'Enter') {
+    const query = e.target.value.trim();
+    if (!query) return;
+
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${mapboxgl.accessToken}`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.features && data.features.length > 0) {
+        const [lng, lat] = data.features[0].center;
+        map.flyTo({ center: [lng, lat], zoom: 14 });
+      } else {
+        alert('Address not found.');
+      }
+    } catch (err) {
+      console.error('Geocoding error:', err);
+      alert('There was a problem searching. Try again.');
+    }
+  }
+});
+
+
 // Build filter legend
 function buildLegend(tagGroups) {
   const container = document.getElementById('legend-content');
