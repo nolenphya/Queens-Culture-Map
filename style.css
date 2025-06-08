@@ -78,3 +78,14 @@ body, html {
   border-radius: 50%;
   display: inline-block;
 }
+
+#address-search {
+  background: white;
+  border-bottom: 1px solid #ccc;
+}
+
+#search-input {
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
