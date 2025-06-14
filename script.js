@@ -120,13 +120,20 @@ function createMarkers(data) {
     el.style.height = '40px';
     el.style.backgroundSize = 'contain';
 
-    const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-      <div style="max-width: 250px;">
-        <h3>${row["Org Name"] || "Untitled"}</h3>
-        ${row.Address ? `<p><b>Address:</b><br>${row.Address}</p>` : ''}
-        ${row.Website ? `<p><a href="${row.Website}" target="_blank">Website</a></p>` : ''}
-      </div>
-    `);
+const imageUrl = Array.isArray(row.Image) && row.Image.length > 0 ? row.Image[0].url : '';
+
+const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+  <div style="max-width: 250px;">
+    ${imageUrl ? `<img src="${imageUrl}" alt="${row["Org Name"] || "Image"}" style="width: 100%; height: auto; margin-bottom: 10px;">` : ''}
+    <h3>${row["Org Name"] || "Untitled"}</h3>
+    ${row.Description ? `<p>${row.Description}</p>` : ''}
+    ${row.Address ? `<p><b>Address:</b><br>${row.Address}</p>` : ''}
+    ${row.Email ? `<p><b>Email:</b> <a href="mailto:${row.Email}">${row.Email}</a></p>` : ''}
+    ${row.Website ? `<p><a href="${row.Website}" target="_blank">Website</a></p>` : ''}
+    ${row.Social ? `<p><a href="${row.Social}" target="_blank">Social</a></p>` : ''}
+  </div>
+`);
+
 
     const marker = new mapboxgl.Marker(el)
       .setLngLat([lng, lat])
