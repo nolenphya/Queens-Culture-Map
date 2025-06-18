@@ -242,18 +242,8 @@ document.getElementById('search-input').addEventListener('keydown', async (e) =>
 map.on('load', () => {
   // Your existing fetchData call
   fetchData();
+});
 
-  // Add your welcome popup
-  const welcomePopup = new mapboxgl.Popup({
-    closeOnClick: true,
-    closeButton: true
-  })
-    .setLngLat(map.getCenter()) // Puts it in the center of the current view
-    .setHTML(`
-      <div style="max-width: 300px;">
-        <h3>Welcome!</h3>
-        <p>Use the legend to filter organizations by category. Click any marker for details. Use the search box to find an address.</p>
-      </div>
-    `)
-    .addTo(map);
+document.getElementById('close-welcome').addEventListener('click', () => {
+  document.getElementById('welcome-overlay').style.display = 'none';
 });
