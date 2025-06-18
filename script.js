@@ -170,29 +170,49 @@ function buildLegend(tagGroups) {
     const list = document.createElement('ul');
     list.className = 'legend-org-list';
 
-    markers.forEach(marker => {
-      const li = document.createElement('li');
+   markers.forEach(marker => {
+  const li = document.createElement('li');
 
-      const dot = document.createElement('span');
-      dot.className = 'legend-color-dot';
-      dot.style.backgroundColor = color;
+  const dot = document.createElement('span');
+  dot.className = 'legend-color-dot';
+  dot.style.backgroundColor = color;
 
-      const label = document.createElement('span');
-      label.textContent = marker.rowData["Org Name"] || "Unnamed";
+  const label = document.createElement('span');
+  label.textContent = marker.rowData["Org Name"] || "Unnamed";
+  label.style.cursor = 'pointer';
+  label.style.textDecoration = 'underline';
 
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = true;
-
-      checkbox.addEventListener('change', () => {
-        marker.getElement().style.display = checkbox.checked ? 'block' : 'none';
-      });
-
-      li.appendChild(checkbox);
-      li.appendChild(dot);
-      li.appendChild(label);
-      list.appendChild(li);
+  label.addEventListener('click', () => {
+    // Fly to marker
+    map.flyTo({
+      center: marker.getLngLat(),
+      zoom: 15,
+      essential: true
     });
+    marker.togglePopup();
+
+    // Highlight this li, remove highlight from others
+    document.querySelectorAll('.legend-org-list li').forEach(item => {
+      item.classList.remove('highlight');
+    });
+    li.classList.add('highlight');
+    setTimeout(() => li.classList.remove('highlight'), 2000);
+
+  });
+
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = true;
+
+  checkbox.addEventListener('change', () => {
+    marker.getElement().style.display = checkbox.checked ? 'block' : 'none';
+  });
+
+  li.appendChild(checkbox);
+  li.appendChild(dot);
+  li.appendChild(label);
+  list.appendChild(li);
+});
 
     header.addEventListener('click', () => {
       collapsed = !collapsed;

@@ -90,6 +90,11 @@ body, html {
   border-radius: 4px;
 }
 
+.legend-org-list li.highlight {
+  background-color: #f0f8ff;  /* Light blue, adjust as you like */
+  transition: background-color 0.3s;
+}
+
 #welcome-overlay {
   position: fixed;
   top: 0;
