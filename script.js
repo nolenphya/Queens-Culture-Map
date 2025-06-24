@@ -262,24 +262,23 @@ document.getElementById('search-input').addEventListener('keydown', async (e) =>
 
 // Load map with data
 map.on('load', () => {
-  // Your existing fetchData call
-  fetchData();
-});
-
-map.on('load', () => {
+  // ✅ 1) Load your approved Airtable points
   fetchData();
 
-  // ✅ Add subway lines source
+  // ✅ 2) Add NYC Subway Lines
   map.addSource('subway-lines', {
     type: 'geojson',
     data: 'https://chriswhong.com/nyc-subway-geojson/subway_lines.geojson'
   });
 
-  // ✅ Add subway lines layer
   map.addLayer({
     id: 'subway-lines-layer',
     type: 'line',
     source: 'subway-lines',
+    layout: {
+      'line-join': 'round',
+      'line-cap': 'round'
+    },
     paint: {
       'line-width': 2,
       'line-color': [
@@ -307,28 +306,30 @@ map.on('load', () => {
         'J', '#996633', // brown
         'Z', '#996633',
         '7', '#B933AD', // purple
-        '#000000' // default: black
+        '#000000' // default black
       ]
+    }
+  });
+
+  // ✅ 3) Add NYC Subway Stations (optional)
+  map.addSource('subway-stations', {
+    type: 'geojson',
+    data: 'https://chriswhong.com/nyc-subway-geojson/subway_stations.geojson'
+  });
+
+  map.addLayer({
+    id: 'subway-stations-layer',
+    type: 'circle',
+    source: 'subway-stations',
+    paint: {
+      'circle-radius': 4,
+      'circle-color': '#ffffff',
+      'circle-stroke-width': 1,
+      'circle-stroke-color': '#000000'
     }
   });
 });
 
-map.addSource('subway-stations', {
-  type: 'geojson',
-  data: 'https://chriswhong.com/nyc-subway-geojson/subway_stations.geojson'
-});
-
-map.addLayer({
-  id: 'subway-stations-layer',
-  type: 'circle',
-  source: 'subway-stations',
-  paint: {
-    'circle-radius': 4,
-    'circle-color': '#ffffff',
-    'circle-stroke-width': 1,
-    'circle-stroke-color': '#000000'
-  }
-});
 
 document.getElementById('close-welcome').addEventListener('click', () => {
   document.getElementById('welcome-overlay').style.display = 'none';
