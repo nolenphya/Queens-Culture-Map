@@ -2,7 +2,7 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/flushingtownhall/cma3bhpb4000l01qwf955dtqx/draft',
+  style: 'mapbox://styles/flushingtownhall/cma3bhpb4000l01qwf955dtqx',
   center: [-73.94, 40.73], // Queens
   zoom: 11
 });
@@ -311,7 +311,19 @@ map.on('load', () => {
     }
   });
 
- 
+  // ✅ 3) Add NYC Subway Stations (optional)
+
+  map.addLayer({
+    id: 'subway-stations-layer',
+    type: 'circle',
+    source: 'subway-stations',
+    paint: {
+      'circle-radius': 1,
+      'circle-color': '#ffffff',
+      'circle-stroke-width': 1,
+      'circle-stroke-color': '#000000'
+    }
+  });
 });
 
 
