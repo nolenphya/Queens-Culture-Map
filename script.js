@@ -311,23 +311,7 @@ map.on('load', () => {
     }
   });
 
-  // ✅ 3) Add NYC Subway Stations (optional)
-  map.addSource('subway-stations', {
-    type: 'geojson',
-    data: 'nyc-subway-stops.geojson'
-  });
-
-  map.addLayer({
-    id: 'subway-stations-layer',
-    type: 'circle',
-    source: 'subway-stations',
-    paint: {
-      'circle-radius': 4,
-      'circle-color': '#ffffff',
-      'circle-stroke-width': 1,
-      'circle-stroke-color': '#000000'
-    }
-  });
+ 
 });
 
 
