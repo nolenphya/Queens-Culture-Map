@@ -95,6 +95,18 @@ body, html {
   transition: background-color 0.3s;
 }
 
+.legend-category h4 {
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+}
+
+.legend-org-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+
 #welcome-overlay {
   position: fixed;
   top: 0;
@@ -123,3 +135,23 @@ body, html {
   font-size: 16px;
   cursor: pointer;
 }
+
+.intro-popup {
+  position: fixed;      /* stays over the map */
+  top: 0;
+  left: 0;
+  width: 100vw;         /* full viewport width */
+  height: 100vh;        /* full viewport height */
+  background: white;    /* or semi-transparent */
+  overflow-y: auto;     /* scrolls if content too tall */
+  z-index: 9999;        /* above everything else */
+  padding: 20px;        /* comfortable spacing */
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.intro-popup-content {
+  max-width: 600px;     /* optional: limits width on large screens */
+  margin: auto;
+}
+

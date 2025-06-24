@@ -162,64 +162,67 @@ function buildLegend(tagGroups) {
   Object.entries(tagGroups).forEach(([tag, markers]) => {
     const color = getColorFor(tag);
 
+    // Create section for this tag
     const section = document.createElement('div');
     section.className = 'legend-category';
 
+    // Create header with arrow
     const header = document.createElement('h4');
-    header.innerHTML = `${tag} <span>▾</span>`;
-    let collapsed = false;
+    header.innerHTML = `<span class="arrow">▾</span> ${tag}`;
+    header.style.cursor = 'pointer';
 
+    // Create list of orgs
     const list = document.createElement('ul');
     list.className = 'legend-org-list';
 
-   markers.forEach(marker => {
-  const li = document.createElement('li');
+    markers.forEach(marker => {
+      const li = document.createElement('li');
 
-  const dot = document.createElement('span');
-  dot.className = 'legend-color-dot';
-  dot.style.backgroundColor = color;
+      const dot = document.createElement('span');
+      dot.className = 'legend-color-dot';
+      dot.style.backgroundColor = color;
 
-  const label = document.createElement('span');
-  label.textContent = marker.rowData["Org Name"] || "Unnamed";
-  label.style.cursor = 'pointer';
-  label.style.textDecoration = 'underline';
+      const label = document.createElement('span');
+      label.textContent = marker.rowData["Org Name"] || "Unnamed";
+      label.style.cursor = 'pointer';
+      label.style.textDecoration = 'underline';
 
-  label.addEventListener('click', () => {
-    // Fly to marker
-    map.flyTo({
-      center: marker.getLngLat(),
-      zoom: 15,
-      essential: true
+      label.addEventListener('click', () => {
+        map.flyTo({
+          center: marker.getLngLat(),
+          zoom: 15,
+          essential: true
+        });
+        marker.togglePopup();
+
+        // Highlight clicked item
+        document.querySelectorAll('.legend-org-list li').forEach(item => {
+          item.classList.remove('highlight');
+        });
+        li.classList.add('highlight');
+        setTimeout(() => li.classList.remove('highlight'), 2000);
+      });
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = true;
+
+      checkbox.addEventListener('change', () => {
+        marker.getElement().style.display = checkbox.checked ? 'block' : 'none';
+      });
+
+      li.appendChild(checkbox);
+      li.appendChild(dot);
+      li.appendChild(label);
+      list.appendChild(li);
     });
-    marker.togglePopup();
 
-    // Highlight this li, remove highlight from others
-    document.querySelectorAll('.legend-org-list li').forEach(item => {
-      item.classList.remove('highlight');
-    });
-    li.classList.add('highlight');
-    setTimeout(() => li.classList.remove('highlight'), 2000);
-
-  });
-
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.checked = true;
-
-  checkbox.addEventListener('change', () => {
-    marker.getElement().style.display = checkbox.checked ? 'block' : 'none';
-  });
-
-  li.appendChild(checkbox);
-  li.appendChild(dot);
-  li.appendChild(label);
-  list.appendChild(li);
-});
-
+    // Toggle expand/collapse
+    let collapsed = false;
     header.addEventListener('click', () => {
       collapsed = !collapsed;
       list.style.display = collapsed ? 'none' : 'block';
-      header.querySelector('span').textContent = collapsed ? '▸' : '▾';
+      header.querySelector('.arrow').textContent = collapsed ? '▸' : '▾';
     });
 
     section.appendChild(header);
@@ -227,6 +230,7 @@ function buildLegend(tagGroups) {
     container.appendChild(section);
   });
 
+  // Reset filters button
   document.getElementById('reset-filters').addEventListener('click', () => {
     document.querySelectorAll('#legend-content input[type="checkbox"]').forEach(cb => {
       cb.checked = true;
@@ -234,6 +238,7 @@ function buildLegend(tagGroups) {
     });
   });
 }
+
 
 document.getElementById('search-input').addEventListener('keydown', async (e) => {
   if (e.key === 'Enter') {
