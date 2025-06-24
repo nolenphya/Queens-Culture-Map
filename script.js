@@ -268,7 +268,7 @@ map.on('load', () => {
   // ✅ 2) Add NYC Subway Lines
   map.addSource('subway-lines', {
     type: 'geojson',
-    data: 'https://chriswhong.com/nyc-subway-geojson/subway_lines.geojson'
+    data: 'nyc-subway-routes.geojson'
   });
 
   map.addLayer({
@@ -314,7 +314,7 @@ map.on('load', () => {
   // ✅ 3) Add NYC Subway Stations (optional)
   map.addSource('subway-stations', {
     type: 'geojson',
-    data: 'https://chriswhong.com/nyc-subway-geojson/subway_stations.geojson'
+    data: 'nyc-subway-stops.geojson'
   });
 
   map.addLayer({
