@@ -266,6 +266,70 @@ map.on('load', () => {
   fetchData();
 });
 
+map.on('load', () => {
+  fetchData();
+
+  // ✅ Add subway lines source
+  map.addSource('subway-lines', {
+    type: 'geojson',
+    data: 'https://chriswhong.com/nyc-subway-geojson/subway_lines.geojson'
+  });
+
+  // ✅ Add subway lines layer
+  map.addLayer({
+    id: 'subway-lines-layer',
+    type: 'line',
+    source: 'subway-lines',
+    paint: {
+      'line-width': 2,
+      'line-color': [
+        'match',
+        ['get', 'rt_symbol'],
+        '1', '#EE352E', // red
+        '2', '#EE352E',
+        '3', '#EE352E',
+        '4', '#00933C', // green
+        '5', '#00933C',
+        '6', '#00933C',
+        'A', '#2850AD', // blue
+        'C', '#2850AD',
+        'E', '#2850AD',
+        'B', '#FF6319', // orange
+        'D', '#FF6319',
+        'F', '#FF6319',
+        'M', '#FF6319',
+        'N', '#FCCC0A', // yellow
+        'Q', '#FCCC0A',
+        'R', '#FCCC0A',
+        'W', '#FCCC0A',
+        'L', '#A7A9AC', // grey
+        'G', '#6CBE45', // light green
+        'J', '#996633', // brown
+        'Z', '#996633',
+        '7', '#B933AD', // purple
+        '#000000' // default: black
+      ]
+    }
+  });
+});
+
+map.addSource('subway-stations', {
+  type: 'geojson',
+  data: 'https://chriswhong.com/nyc-subway-geojson/subway_stations.geojson'
+});
+
+map.addLayer({
+  id: 'subway-stations-layer',
+  type: 'circle',
+  source: 'subway-stations',
+  paint: {
+    'circle-radius': 4,
+    'circle-color': '#ffffff',
+    'circle-stroke-width': 1,
+    'circle-stroke-color': '#000000'
+  }
+});
+
 document.getElementById('close-welcome').addEventListener('click', () => {
   document.getElementById('welcome-overlay').style.display = 'none';
 });
