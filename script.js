@@ -42,7 +42,8 @@ function createColoredMarkerSVG(color) {
 
 // Fetch and enrich data
 async function fetchData() {
-  const res = await fetch(`${AIRTABLE_URL}?view=Grid%20view`, {
+  // ✅ Add filterByFormula to fetch only Approved = true
+  const res = await fetch(`${AIRTABLE_URL}?view=Grid%20view&filterByFormula=Approved`, {
     headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
   });
 
@@ -58,6 +59,7 @@ async function fetchData() {
 
   createMarkers(enrichedRecords.filter(Boolean));
 }
+
 
 // Geocode missing coordinates
 async function geocodeAndSaveMissingCoords(record) {
