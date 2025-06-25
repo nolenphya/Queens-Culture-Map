@@ -2,7 +2,7 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/flushingtownhall/cma3bhpb4000l01qwf955dtqx',
+  style: 'mapbox://styles/flushingtownhall/cma3bhpb4000l01qwf955dtqx/draft',
   center: [-73.94, 40.73], // Queens
   zoom: 11
 });
