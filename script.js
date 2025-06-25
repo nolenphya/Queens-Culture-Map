@@ -239,6 +239,19 @@ function buildLegend(tagGroups) {
   });
 }
 
+// Master legend collapse
+const legendToggle = document.getElementById('legend-toggle');
+const legendArrow = document.getElementById('legend-arrow');
+const legendContent = document.getElementById('legend-content');
+
+let legendCollapsed = false;
+
+legendToggle.addEventListener('click', () => {
+  legendCollapsed = !legendCollapsed;
+  legendContent.style.display = legendCollapsed ? 'none' : 'block';
+  legendArrow.textContent = legendCollapsed ? '▸' : '▾';
+});
+
 
 document.getElementById('search-input').addEventListener('keydown', async (e) => {
   if (e.key === 'Enter') {

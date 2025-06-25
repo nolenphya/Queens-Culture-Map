@@ -52,11 +52,22 @@ body, html {
 
 .legend-category h4 {
   display: flex;
-  justify-content: space-between;
-  margin: 0;
-  font-size: 14px;
+  align-items: center;
   cursor: pointer;
+  margin: 0;
 }
+
+.legend-category .arrow {
+  display: inline-block;
+  margin-right: 6px;  /* gap between arrow and text */
+}
+
+.legend-org-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 20px; /* indent list items, not header */
+}
+
 
 .legend-org-list {
   list-style: none;
@@ -94,18 +105,6 @@ body, html {
   background-color: #f0f8ff;  /* Light blue, adjust as you like */
   transition: background-color 0.3s;
 }
-
-.legend-category h4 {
-  cursor: pointer;
-  user-select: none;
-  margin: 0;
-}
-
-.legend-org-list {
-  margin: 0;
-  padding-left: 20px;
-}
-
 
 #welcome-overlay {
   position: fixed;
