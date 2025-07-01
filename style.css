@@ -224,3 +224,14 @@ body, html {
     transform: translateY(90%);
   }
 }
+
+#legend-content {
+  transition: opacity 0.3s ease;
+}
+
+#legend-wrapper.collapsed #legend-content {
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  overflow: hidden;
+}
