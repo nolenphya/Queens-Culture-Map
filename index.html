@@ -15,8 +15,9 @@
 <body>
 
   <!-- Map -->
-   <div id="welcome-overlay">
-  <div class="welcome-content" style="font-family: Arial, Helvetica, sans-serif;">
+   
+   <div id="intro-overlay">
+  <div class="intro-content" style="font-family: Arial, Helvetica, sans-serif;">
     <h2>Welcome to the Queens Cultural Map & Directory </h2>
     <p>In 2024, Flushing Town Hall was invited by the New York State Council on the Arts (NYSCA) to lead a new initiative—the Queens Cultural Mapping Project—designed to document the rich and diverse artistic landscape of Queens. The project celebrates the cultural contributions of its communities while also shedding light on the challenges they face. <br/><br/>
       
@@ -25,7 +26,7 @@
       Our goal is for this map to be a valuable tool that fosters connections among artists, cultural workers, and community spaces in Queens—supporting deeper exploration, engagement, and collaboration across the borough’s vibrant creative communities. <br/><br/>
       
       We’re excited to continue growing this resource. <a href="https://airtable.com/apppBx0a9hj0Z1ciw/pagkf63IaBt2wJvFo/form">If you’d like to add your organization to the map, please fill out this form. </a></p>
-    <button id="close-welcome">Get Started</button>
+    <button id="close-intro">Get Started</button>
   </div>
 </div>
 
@@ -42,11 +43,14 @@
     <div id="address-search" style="padding: 10px;">
   <input type="text" id="search-input" placeholder="Search address..." style="width: 100%; padding: 6px;" />
 </div>
-<div id="legend-toggle">
-  <span id="legend-arrow">▾</span> Legend
-</div>
-<div id="legend-content"></div>
+
+<div id="legend-wrapper">
+  <button id="legend-toggle">▲</button>
+  <div id="legend-content">
+    <div id="legend"></div>
   </div>
+</div>
+
 
   <!-- JS -->
   <script src="script.js"></script>

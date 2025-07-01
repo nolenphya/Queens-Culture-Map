@@ -345,6 +345,23 @@ map.on('load', () => {
 });
 
 
-document.getElementById('close-welcome').addEventListener('click', () => {
-  document.getElementById('welcome-overlay').style.display = 'none';
+document.getElementById('close-intro').addEventListener('click', () => {
+  document.getElementById('intro-overlay').style.display = 'none';
+});
+
+const intro = document.getElementById('intro-overlay');
+intro.addEventListener('touchmove', (e) => {
+  if (intro.scrollTop > 100) {
+    intro.style.display = 'none';
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const toggleBtn = document.getElementById('legend-toggle');
+  const wrapper = document.getElementById('legend-wrapper');
+
+  toggleBtn.addEventListener('click', () => {
+    wrapper.classList.toggle('collapsed');
+    toggleBtn.textContent = wrapper.classList.contains('collapsed') ? '▲' : '▼';
+  });
 });
