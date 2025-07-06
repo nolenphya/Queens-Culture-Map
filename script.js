@@ -162,19 +162,32 @@ function buildLegend(tagGroups) {
   Object.entries(tagGroups).forEach(([tag, markers]) => {
     const color = getColorFor(tag);
 
-    // Create section for this tag
     const section = document.createElement('div');
     section.className = 'legend-category';
 
-    // Create header with arrow
     const header = document.createElement('h4');
     header.innerHTML = `<span class="arrow">▾</span> ${tag}`;
     header.style.cursor = 'pointer';
 
-    // Create list of orgs
     const list = document.createElement('ul');
     list.className = 'legend-org-list';
 
+    let collapsed = false;      // toggle state
+    let visible = true;         // visibility state
+
+    // ↪ Click to collapse/expand AND hide/show markers
+    header.addEventListener('click', () => {
+      collapsed = !collapsed;
+      list.style.display = collapsed ? 'none' : 'block';
+      header.querySelector('.arrow').textContent = collapsed ? '▸' : '▾';
+
+      visible = !visible;
+      markers.forEach(marker => {
+        marker.getElement().style.display = visible ? 'block' : 'none';
+      });
+    });
+
+    // Individual items
     markers.forEach(marker => {
       const li = document.createElement('li');
 
@@ -188,19 +201,8 @@ function buildLegend(tagGroups) {
       label.style.textDecoration = 'underline';
 
       label.addEventListener('click', () => {
-        map.flyTo({
-          center: marker.getLngLat(),
-          zoom: 15,
-          essential: true
-        });
+        map.flyTo({ center: marker.getLngLat(), zoom: 15, essential: true });
         marker.togglePopup();
-
-        // Highlight clicked item
-        document.querySelectorAll('.legend-org-list li').forEach(item => {
-          item.classList.remove('highlight');
-        });
-        li.classList.add('highlight');
-        setTimeout(() => li.classList.remove('highlight'), 2000);
       });
 
       const checkbox = document.createElement('input');
@@ -217,25 +219,9 @@ function buildLegend(tagGroups) {
       list.appendChild(li);
     });
 
-    // Toggle expand/collapse
-    let collapsed = false;
-    header.addEventListener('click', () => {
-      collapsed = !collapsed;
-      list.style.display = collapsed ? 'none' : 'block';
-      header.querySelector('.arrow').textContent = collapsed ? '▸' : '▾';
-    });
-
     section.appendChild(header);
     section.appendChild(list);
     container.appendChild(section);
-  });
-
-  // Reset filters button
-  document.getElementById('reset-filters').addEventListener('click', () => {
-    document.querySelectorAll('#legend-content input[type="checkbox"]').forEach(cb => {
-      cb.checked = true;
-      cb.dispatchEvent(new Event('change'));
-    });
   });
 }
 
@@ -344,6 +330,7 @@ map.on('load', () => {
   });
 });
 
+map.addControl(new mapboxgl.NavigationControl({ showCompass: true }), 'bottom-right');
 
 document.getElementById('close-intro').addEventListener('click', () => {
   document.getElementById('intro-overlay').style.display = 'none';
