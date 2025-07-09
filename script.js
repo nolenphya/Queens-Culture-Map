@@ -2,7 +2,7 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'style.json', // local style JSON file
+  style: 'mapbox://styles/flushingtownhall/cmcijib3x00as01s72owfhgo7', // local style JSON file can be used too
   center: [-73.94, 40.73],
   zoom: 11
 });
@@ -330,7 +330,7 @@ map.on('load', () => {
   });
 });
 
-map.addControl(new mapboxgl.NavigationControl({ showCompass: true }), 'bottom-right');
+map.addControl(new mapboxgl.NavigationControl({ showCompass: true }), 'top-right');
 
 document.getElementById('close-intro').addEventListener('click', () => {
   document.getElementById('intro-overlay').style.display = 'none';
