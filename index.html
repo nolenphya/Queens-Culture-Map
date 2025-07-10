@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,29 +11,32 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="style.css" />
-
 </head>
 <body>
 
   <!-- Intro Overlay -->
-  <div id="intro-overlay" style="font-family: Arial, Helvetica, sans-serif;">
-    <div class="intro-content" style="font-family: Arial, Helvetica, sans-serif;">
+  <div id="intro-overlay">
+    <div class="intro-content">
       <h2>Welcome to the Queens Cultural Map & Directory</h2>
       <p>
-       In 2024, Flushing Town Hall was invited by the New York State Council on the Arts (NYSCA) to lead a new initiative—the Queens Cultural Mapping Project—designed to document the rich and diverse artistic landscape of Queens. The project celebrates the cultural contributions of its communities while also shedding light on the challenges they face. 
-<br/><br/>
-Through this work, our team connected with over 150 artists and arts and cultural organizations across the borough. A clear need emerged: a centralized, accessible resource that would connect artists, cultural organizations, and community spaces throughout Queens. This digital map was created in direct response to that need. 
-<br/><br/>
-Our goal is for this map to be a valuable tool that fosters connections among artists, cultural workers, and community spaces in Queens—supporting deeper exploration, engagement, and collaboration across the borough’s vibrant creative communities. 
-
-We’re excited to continue growing this resource.<br><br>
-        <a href="https://airtable.com/apppBx0a9hj0Z1ciw/pagkf63IaBt2wJvFo/form" target="_blank">
-          If you’d like to add your organization to the map, please fill out this form. 
-          <br/><Br/>
-          <img src="fthlogo.png" style="max-height: 150px;">
-          <img src="nyslogo.png" style="max-height: 150px;">
-        </a>
+        In 2024, Flushing Town Hall was invited by the New York State Council on the Arts (NYSCA) to lead a new initiative—the Queens Cultural Mapping Project—designed to document the rich and diverse artistic landscape of Queens.
+        The project celebrates the cultural contributions of its communities while also shedding light on the challenges they face.
+        <br/><br/>
+        Through this work, our team connected with over 150 artists and arts and cultural organizations across the borough. A clear need emerged:
+        a centralized, accessible resource that would connect artists, cultural organizations, and community spaces throughout Queens.
+        This digital map was created in direct response to that need.
+        <br/><br/>
+        Our goal is for this map to be a valuable tool that fosters connections among artists, cultural workers, and community spaces in Queens—
+        supporting deeper exploration, engagement, and collaboration across the borough’s vibrant creative communities.
+        <br/><br/>
+        We’re excited to continue growing this resource.
       </p>
+      <a href="https://airtable.com/apppBx0a9hj0Z1ciw/pagkf63IaBt2wJvFo/form" target="_blank">
+        If you’d like to add your organization to the map, please fill out this form.
+        <br/><br/>
+        <img src="fthlogo.png" alt="FTH Logo" class="logo">
+        <img src="nyslogo.png" alt="NYS Logo" class="logo">
+      </a>
       <button id="close-intro">Get Started</button>
     </div>
   </div>
@@ -43,7 +45,7 @@ We’re excited to continue growing this resource.<br><br>
   <div id="map"></div>
 
   <!-- Legend Panel -->
-  <div id="legend-panel" style="font-family: Arial, Helvetica, sans-serif;">
+  <div id="legend-panel">
     <div class="legend-header">
       <span>Find an Address</span>
       <button id="reset-filters">Reset</button>
@@ -52,7 +54,7 @@ We’re excited to continue growing this resource.<br><br>
     <div id="address-search">
       <input type="text" id="search-input" placeholder="Search address..." />
     </div>
-<br/><br/>
+
     <div id="legend-wrapper">
       <button id="legend-toggle" title="Collapse legend">▲</button>
       <div id="legend-content">
