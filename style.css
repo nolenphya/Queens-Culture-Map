@@ -1,16 +1,8 @@
 /* Global Reset */
-
-html, body {
+body, html {
   margin: 0;
   padding: 0;
   height: 100%;
-  overflow-x: hidden;
-}
-
-.intro-content {
-  width: 100%;
-  max-width: 600px;
-  box-sizing: border-box;
 }
 
 #map {
@@ -20,18 +12,21 @@ html, body {
   width: 100%;
 }
 
-@media (max-width: 600px) {
-  #intro-overlay {
-    padding: 10px;
-  }
-
-  .intro-content {
-    max-width: 100%;
-    padding: 15px;
-    font-size: 14px;
-  }
+/* Intro Overlay */
+#intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.97);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  padding: 20px;
 }
-
 
 .intro-content {
   background: white;
@@ -205,35 +200,4 @@ html, body {
     right: 10px;
     z-index: 1000;
   }
-}
-
-/* Customize popup content */
-.mapboxgl-popup-content {
-  max-height: 300px;
-  overflow-y: auto;
-  font-size: 14px;
-}
-
-/* Mobile popup adjustment */
-@media (max-width: 600px) {
-  .mapboxgl-popup-content {
-    max-height: 50vh;   /* Half the screen height */
-    width: 90vw;        /* Make it responsive width-wise */
-    font-size: 15px;    /* Optional: slightly larger font for readability */
-    padding: 10px;
-  }
-
-  .mapboxgl-popup {
-    max-width: 100vw !important;
-  }
-}
-
-.mapboxgl-popup-content * {
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.mapboxgl-popup-content img {
-  max-width: 100%;
-  height: auto;
 }
