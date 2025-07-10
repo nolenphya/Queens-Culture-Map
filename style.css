@@ -1,20 +1,16 @@
 /* Global Reset */
 
 html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
   overflow-x: hidden;
 }
-
 
 .intro-content {
   width: 100%;
   max-width: 600px;
   box-sizing: border-box;
-}
-
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
 }
 
 #map {
@@ -24,25 +20,18 @@ body, html {
   width: 100%;
 }
 
-#map {
-  overflow-x: hidden;
+@media (max-width: 600px) {
+  #intro-overlay {
+    padding: 10px;
+  }
+
+  .intro-content {
+    max-width: 100%;
+    padding: 15px;
+    font-size: 14px;
+  }
 }
 
-/* Intro Overlay */
-#intro-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255, 255, 255, 0.97);
-  z-index: 10000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-y: auto;
-  padding: 20px;
-}
 
 .intro-content {
   background: white;
@@ -239,9 +228,8 @@ body, html {
   }
 }
 
-.mapboxgl-popup-content,
-#legend-panel {
-  word-wrap: break-word;
+.mapboxgl-popup-content * {
+  max-width: 100%;
   box-sizing: border-box;
 }
 
