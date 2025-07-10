@@ -2,7 +2,7 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/flushingtownhall/cmcwuck3w013k01qvb85rfob8', // local style JSON file can be used too
+  style: 'mapbox://styles/flushingtownhall/cmcwuck3w013k01qvb85rfob8/draft', // local style JSON file can be used too
   center: [-73.94, 40.73],
   zoom: 11
 });
