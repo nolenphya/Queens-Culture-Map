@@ -1,4 +1,16 @@
 /* Global Reset */
+
+html, body {
+  overflow-x: hidden;
+}
+
+
+.intro-content {
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
+}
+
 body, html {
   margin: 0;
   padding: 0;
@@ -10,6 +22,10 @@ body, html {
   top: 0;
   bottom: 0;
   width: 100%;
+}
+
+#map {
+  overflow-x: hidden;
 }
 
 /* Intro Overlay */
@@ -202,3 +218,23 @@ body, html {
   }
 }
 
+/* Customize popup content */
+.mapboxgl-popup-content {
+  max-height: 300px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+/* Mobile popup adjustment */
+@media (max-width: 600px) {
+  .mapboxgl-popup-content {
+    max-height: 50vh;   /* Half the screen height */
+    width: 90vw;        /* Make it responsive width-wise */
+    font-size: 15px;    /* Optional: slightly larger font for readability */
+    padding: 10px;
+  }
+
+  .mapboxgl-popup {
+    max-width: 100vw !important;
+  }
+}
