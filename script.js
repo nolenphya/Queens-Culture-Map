@@ -159,6 +159,8 @@ function buildLegend(tagGroups) {
   container.innerHTML = '';
 
   Object.entries(tagGroups).forEach(([tag, markers]) => {
+    const iconKey = iconMap[tag] || 'default'; // ✅ define iconKey here
+
     const section = document.createElement('div');
     section.className = 'legend-category';
 
@@ -172,7 +174,7 @@ function buildLegend(tagGroups) {
     markers.forEach(marker => {
       const li = document.createElement('li');
 
-      const iconKey = iconMap[tag] || 'default';
+      // ✅ Now iconKey is defined correctly
       const icon = document.createElement('img');
       icon.src = `icons/${iconKey}.png`;
       icon.alt = `${tag} icon`;
@@ -206,8 +208,6 @@ function buildLegend(tagGroups) {
 
     section.appendChild(list);
     container.appendChild(section);
-    console.log('Legend category:', tag, '| icon:', iconKey);
-
   });
 }
 
