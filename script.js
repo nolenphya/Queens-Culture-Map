@@ -160,42 +160,27 @@ function buildLegend(tagGroups) {
   container.innerHTML = '';
 
   Object.entries(tagGroups).forEach(([tag, markers]) => {
-    const color = getColorFor(tag);
-
     const section = document.createElement('div');
     section.className = 'legend-category';
 
     const header = document.createElement('h4');
     header.innerHTML = `<span class="arrow">▾</span> ${tag}`;
-    header.style.cursor = 'pointer';
+    section.appendChild(header);
 
     const list = document.createElement('ul');
     list.className = 'legend-org-list';
 
-    let collapsed = false;
-    let visible = true;
-
-    header.addEventListener('click', () => {
-      collapsed = !collapsed;
-      list.style.display = collapsed ? 'none' : 'block';
-      header.querySelector('.arrow').textContent = collapsed ? '▸' : '▾';
-      visible = !visible;
-      markers.forEach(marker => {
-        marker.getElement().style.display = visible ? 'block' : 'none';
-      });
-    });
-
     markers.forEach(marker => {
       const li = document.createElement('li');
-      const iconKey = iconMap[tag] || 'default';
-const icon = document.createElement('img');
-icon.src = `icons/${iconKey}.png`;
-icon.alt = `${tag} icon`;
-icon.style.width = '20px';
-icon.style.height = '20px';
-icon.style.marginRight = '6px';
-icon.style.verticalAlign = 'middle';
 
+      const iconKey = iconMap[tag] || 'default';
+      const icon = document.createElement('img');
+      icon.src = `icons/${iconKey}.png`;
+      icon.alt = `${tag} icon`;
+      icon.style.width = '20px';
+      icon.style.height = '20px';
+      icon.style.marginRight = '6px';
+      icon.style.verticalAlign = 'middle';
 
       const label = document.createElement('span');
       label.textContent = marker.rowData["Org Name"] || "Unnamed";
@@ -210,22 +195,21 @@ icon.style.verticalAlign = 'middle';
       const checkbox = document.createElement('input');
       checkbox.type = 'checkbox';
       checkbox.checked = true;
-
       checkbox.addEventListener('change', () => {
         marker.getElement().style.display = checkbox.checked ? 'block' : 'none';
       });
 
-     li.appendChild(checkbox);
-li.appendChild(icon);    // instead of dot
-li.appendChild(label);
-
+      li.appendChild(checkbox);
+      li.appendChild(icon);
+      li.appendChild(label);
+      list.appendChild(li);
     });
 
-    section.appendChild(header);
     section.appendChild(list);
     container.appendChild(section);
   });
 }
+
 
 // Legend panel toggle
 const legendToggle = document.getElementById('legend-toggle');
