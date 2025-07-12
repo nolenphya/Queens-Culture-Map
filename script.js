@@ -2,7 +2,7 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/flushingtownhall/cma3bhpb4000l01qwf955dtqx', // local style JSON file can be used too
+  style: 'mapbox://styles/flushingtownhall/cma3bhpb4000l01qwf955dtqx',
   center: [-73.94, 40.73],
   zoom: 11
 });
@@ -13,6 +13,22 @@ const BASE_ID = 'apppBx0a9hj0Z1ciw';
 const TABLE_NAME = 'tblgqyoE5TZUzQDKw';
 const AIRTABLE_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
 
+// Icon mapping for tags
+const iconMap = {
+  'Community Garden': 'community-garden.png',
+  'Gallery': 'gallery.png',
+  'Museum/Cultural Institution': 'museum.png',
+  'Music Group/Vocal Ensemble': 'music-group-vocal-ensemble.png',
+  'Dance Company': 'dance-studio.png',
+  'Multidisciplinary Arts Center': 'multidisciplinary-arts-center.png',
+  'Community Center': 'community-center.png',
+  'Theatre': 'theatre.png',
+  'Video/Film Company': 'video-film-company.png',
+  'Art Center/Studio': 'art-center-studio.png',
+  'Cultural Arts Center': 'cultural-arts-center.png',
+  'Historic Society/Preservation Group': 'archive.png'
+};
+
 // Globals
 let allMarkers = [];
 const colorMap = {};
@@ -22,7 +38,7 @@ const colorPalette = [
   '#bcf60c', '#fabebe', '#008080', '#e6beff'
 ];
 
-// Color assignment
+// Color assignment (used for legend dots)
 function getColorFor(tag) {
   if (!colorMap[tag]) {
     const index = Object.keys(colorMap).length % colorPalette.length;
@@ -31,18 +47,8 @@ function getColorFor(tag) {
   return colorMap[tag];
 }
 
-// SVG pin
-function createColoredMarkerSVG(color) {
-  return encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 24" fill="${color}">
-      <path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/>
-    </svg>
-  `);
-}
-
 // Fetch and enrich data
 async function fetchData() {
-  // ✅ Add filterByFormula to fetch only Approved = true
   const res = await fetch(`${AIRTABLE_URL}?view=Grid%20view&filterByFormula=Approved`, {
     headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
   });
@@ -60,7 +66,6 @@ async function fetchData() {
   createMarkers(enrichedRecords.filter(Boolean));
 }
 
-
 // Geocode missing coordinates
 async function geocodeAndSaveMissingCoords(record) {
   if (!record.Address) return null;
@@ -71,24 +76,17 @@ async function geocodeAndSaveMissingCoords(record) {
   try {
     const res = await fetch(geocodeUrl);
     const json = await res.json();
-
     if (!json.features.length) return null;
 
     const [lng, lat] = json.features[0].center;
 
-    // Save back to Airtable
     await fetch(`${AIRTABLE_URL}/${record.id}`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${AIRTABLE_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        fields: {
-          Latitude: lat,
-          Longitude: lng
-        }
-      })
+      body: JSON.stringify({ fields: { Latitude: lat, Longitude: lng } })
     });
 
     record.Latitude = lat;
@@ -100,7 +98,7 @@ async function geocodeAndSaveMissingCoords(record) {
   }
 }
 
-// Create markers
+// Create markers with icons
 function createMarkers(data) {
   allMarkers.forEach(m => m.remove());
   allMarkers = [];
@@ -114,28 +112,28 @@ function createMarkers(data) {
 
     const tags = (row.Tags || "").split(',').map(t => t.trim()).filter(Boolean);
     const primaryTag = tags[0] || 'Uncategorized';
-    const color = getColorFor(primaryTag);
+    const iconKey = iconMap[primaryTag] || 'default';
 
     const el = document.createElement('div');
-    el.style.backgroundImage = `url('data:image/svg+xml,${createColoredMarkerSVG(color)}')`;
-    el.style.width = '30px';
-    el.style.height = '40px';
+    el.style.backgroundImage = `url(icons/${iconKey}.png)`;
+    el.style.width = '32px';
+    el.style.height = '32px';
     el.style.backgroundSize = 'contain';
+    el.style.backgroundRepeat = 'no-repeat';
 
-const imageUrl = Array.isArray(row.Image) && row.Image.length > 0 ? row.Image[0].url : '';
+    const imageUrl = Array.isArray(row.Image) && row.Image.length > 0 ? row.Image[0].url : '';
 
-const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
-  <div style="max-width: 250px;">
-    ${imageUrl ? `<img src="${imageUrl}" alt="${row["Org Name"] || "Image"}" style="width: 100%; height: auto; margin-bottom: 10px;">` : ''}
-    <h3>${row["Org Name"] || "Untitled"}</h3>
-    ${row.Description ? `<p>${row.Description}</p>` : ''}
-    ${row.Address ? `<p><b>Address:</b><br>${row.Address}</p>` : ''}
-    ${row.Email ? `<p><b>Email:</b> <a href="mailto:${row.Email}">${row.Email}</a></p>` : ''}
-    ${row.Website ? `<p><a href="${row.Website}" target="_blank">Website</a></p>` : ''}
-    ${row.Social ? `<p><a href="${row.Social}" target="_blank">Social</a></p>` : ''}
-  </div>
-`);
-
+    const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+      <div style="max-width: 250px;">
+        ${imageUrl ? `<img src="${imageUrl}" alt="${row["Org Name"] || "Image"}" style="width: 100%; height: auto; margin-bottom: 10px;">` : ''}
+        <h3>${row["Org Name"] || "Untitled"}</h3>
+        ${row.Description ? `<p>${row.Description}</p>` : ''}
+        ${row.Address ? `<p><b>Address:</b><br>${row.Address}</p>` : ''}
+        ${row.Email ? `<p><b>Email:</b> <a href="mailto:${row.Email}">${row.Email}</a></p>` : ''}
+        ${row.Website ? `<p><a href="${row.Website}" target="_blank">Website</a></p>` : ''}
+        ${row.Social ? `<p><a href="${row.Social}" target="_blank">Social</a></p>` : ''}
+      </div>
+    `);
 
     const marker = new mapboxgl.Marker(el)
       .setLngLat([lng, lat])
@@ -154,7 +152,7 @@ const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
   buildLegend(tagGroups);
 }
 
-// Build filter legend
+// Build legend
 function buildLegend(tagGroups) {
   const container = document.getElementById('legend-content');
   container.innerHTML = '';
@@ -172,28 +170,30 @@ function buildLegend(tagGroups) {
     const list = document.createElement('ul');
     list.className = 'legend-org-list';
 
-    let collapsed = false;      // toggle state
-    let visible = true;         // visibility state
+    let collapsed = false;
+    let visible = true;
 
-    // ↪ Click to collapse/expand AND hide/show markers
     header.addEventListener('click', () => {
       collapsed = !collapsed;
       list.style.display = collapsed ? 'none' : 'block';
       header.querySelector('.arrow').textContent = collapsed ? '▸' : '▾';
-
       visible = !visible;
       markers.forEach(marker => {
         marker.getElement().style.display = visible ? 'block' : 'none';
       });
     });
 
-    // Individual items
     markers.forEach(marker => {
       const li = document.createElement('li');
+      const iconKey = iconMap[tag] || 'default';
+const icon = document.createElement('img');
+icon.src = `icons/${iconKey}.png`;
+icon.alt = `${tag} icon`;
+icon.style.width = '20px';
+icon.style.height = '20px';
+icon.style.marginRight = '6px';
+icon.style.verticalAlign = 'middle';
 
-      const dot = document.createElement('span');
-      dot.className = 'legend-color-dot';
-      dot.style.backgroundColor = color;
 
       const label = document.createElement('span');
       label.textContent = marker.rowData["Org Name"] || "Unnamed";
@@ -213,10 +213,10 @@ function buildLegend(tagGroups) {
         marker.getElement().style.display = checkbox.checked ? 'block' : 'none';
       });
 
-      li.appendChild(checkbox);
-      li.appendChild(dot);
-      li.appendChild(label);
-      list.appendChild(li);
+     li.appendChild(checkbox);
+li.appendChild(icon);    // instead of dot
+li.appendChild(label);
+
     });
 
     section.appendChild(header);
@@ -225,7 +225,7 @@ function buildLegend(tagGroups) {
   });
 }
 
-// Master legend collapse
+// Legend panel toggle
 const legendToggle = document.getElementById('legend-toggle');
 const legendArrow = document.getElementById('legend-arrow');
 const legendContent = document.getElementById('legend-content');
@@ -238,7 +238,7 @@ legendToggle.addEventListener('click', () => {
   legendArrow.textContent = legendCollapsed ? '▸' : '▾';
 });
 
-
+// Search bar
 document.getElementById('search-input').addEventListener('keydown', async (e) => {
   if (e.key === 'Enter') {
     const query = e.target.value.trim();
@@ -263,13 +263,21 @@ document.getElementById('search-input').addEventListener('keydown', async (e) =>
   }
 });
 
-
-// Load map with data
+// Map load logic
 map.on('load', () => {
-  // ✅ 1) Load your approved Airtable points
+  Object.values(iconMap).forEach(iconName => {
+    map.loadImage(`icons/${iconName}.png`, (error, image) => {
+      if (error) {
+        console.warn(`Could not load icon "${iconName}":`, error);
+      } else if (!map.hasImage(iconName)) {
+        map.addImage(iconName, image);
+      }
+    });
+  });
+
   fetchData();
 
-  // ✅ 2) Add NYC Subway Lines
+  // Subway lines
   map.addSource('subway-lines', {
     type: 'geojson',
     data: 'nyc-subway-routes.geojson'
@@ -279,43 +287,23 @@ map.on('load', () => {
     id: 'subway-lines-layer',
     type: 'line',
     source: 'subway-lines',
-    layout: {
-      'line-join': 'round',
-      'line-cap': 'round'
-    },
+    layout: { 'line-join': 'round', 'line-cap': 'round' },
     paint: {
       'line-width': 2,
       'line-color': [
         'match',
         ['get', 'rt_symbol'],
-        '1', '#EE352E', // red
-        '2', '#EE352E',
-        '3', '#EE352E',
-        '4', '#00933C', // green
-        '5', '#00933C',
-        '6', '#00933C',
-        'A', '#2850AD', // blue
-        'C', '#2850AD',
-        'E', '#2850AD',
-        'B', '#FF6319', // orange
-        'D', '#FF6319',
-        'F', '#FF6319',
-        'M', '#FF6319',
-        'N', '#FCCC0A', // yellow
-        'Q', '#FCCC0A',
-        'R', '#FCCC0A',
-        'W', '#FCCC0A',
-        'L', '#A7A9AC', // grey
-        'G', '#6CBE45', // light green
-        'J', '#996633', // brown
-        'Z', '#996633',
-        '7', '#B933AD', // purple
-        '#000000' // default black
+        '1', '#EE352E', '2', '#EE352E', '3', '#EE352E',
+        '4', '#00933C', '5', '#00933C', '6', '#00933C',
+        'A', '#2850AD', 'C', '#2850AD', 'E', '#2850AD',
+        'B', '#FF6319', 'D', '#FF6319', 'F', '#FF6319', 'M', '#FF6319',
+        'N', '#FCCC0A', 'Q', '#FCCC0A', 'R', '#FCCC0A', 'W', '#FCCC0A',
+        'L', '#A7A9AC', 'G', '#6CBE45', 'J', '#996633', 'Z', '#996633',
+        '7', '#B933AD',
+        '#000000'
       ]
     }
   });
-
-  // ✅ 3) Add NYC Subway Stations (optional)
 
   map.addLayer({
     id: 'subway-stations-layer',
@@ -330,6 +318,7 @@ map.on('load', () => {
   });
 });
 
+// Controls & overlay logic
 map.addControl(new mapboxgl.NavigationControl({ showCompass: true }), 'top-right');
 
 document.getElementById('close-intro').addEventListener('click', () => {
