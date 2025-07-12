@@ -15,18 +15,18 @@ const AIRTABLE_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
 
 // Icon mapping for tags
 const iconMap = {
-  'Community Garden': 'community-garden.png',
-  'Gallery': 'gallery.png',
-  'Museum/Cultural Institution': 'museum.png',
-  'Music Group/Vocal Ensemble': 'music-group-vocal-ensemble.png',
+  'Community Garden': 'community-garden',
+  'Gallery': 'gallery',
+  'Museum/Cultural Institution': 'museum',
+  'Music Group/Vocal Ensemble': 'music-group-vocal-ensemble',
   'Dance Company': 'dance-studio.png',
-  'Multidisciplinary Arts Center': 'multidisciplinary-arts-center.png',
-  'Community Center': 'community-center.png',
-  'Theatre': 'theatre.png',
-  'Video/Film Company': 'video-film-company.png',
-  'Art Center/Studio': 'art-center-studio.png',
-  'Cultural Arts Center': 'cultural-arts-center.png',
-  'Historic Society/Preservation Group': 'archive.png'
+  'Multidisciplinary Arts Center': 'multidisciplinary-arts-center',
+  'Community Center': 'community-center',
+  'Theatre': 'theatre',
+  'Video/Film Company': 'video-film-company',
+  'Art Center/Studio': 'art-center-studio',
+  'Cultural Arts Center': 'cultural-arts-center',
+  'Historic Society/Preservation Group': 'archive'
 };
 
 // Globals
