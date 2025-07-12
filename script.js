@@ -19,7 +19,7 @@ const iconMap = {
   'Gallery': 'gallery',
   'Museum/Cultural Institution': 'museum',
   'Music Group/Vocal Ensemble': 'music-group-vocal-ensemble',
-  'Dance Company': 'dance-studio.png',
+  'Dance Company': 'dance-studio',
   'Multidisciplinary Arts Center': 'multidisciplinary-arts-center',
   'Community Center': 'community-center',
   'Theatre': 'theatre',
@@ -150,6 +150,8 @@ function createMarkers(data) {
   });
 
   buildLegend(tagGroups);
+  console.log('Primary tag:', primaryTag, '| Icon:', iconKey);
+
 }
 
 // Build legend
