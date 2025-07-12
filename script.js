@@ -112,7 +112,7 @@ function createMarkers(data) {
 
     const tags = (row.Tags || "").split(',').map(t => t.trim()).filter(Boolean);
     const primaryTag = tags[0] || 'Uncategorized';
-    const iconKey = iconMap[tag] || 'default';
+    const iconKey = iconMap[primaryTag] || 'default';
 
     const el = document.createElement('div');
     el.style.backgroundImage = `url(icons/${iconKey}.png)`;
@@ -150,7 +150,6 @@ function createMarkers(data) {
   });
 
   buildLegend(tagGroups);
-  console.log('Legend category:', tag, '| icon:', iconKey);
 
 }
 
@@ -207,6 +206,8 @@ function buildLegend(tagGroups) {
 
     section.appendChild(list);
     container.appendChild(section);
+    console.log('Legend category:', tag, '| icon:', iconKey);
+
   });
 }
 
