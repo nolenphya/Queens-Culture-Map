@@ -38,7 +38,6 @@ const colorPalette = [
   '#bcf60c', '#fabebe', '#008080', '#e6beff'
 ];
 
-// Color assignment (used for legend dots)
 function getColorFor(tag) {
   if (!colorMap[tag]) {
     const index = Object.keys(colorMap).length % colorPalette.length;
@@ -47,7 +46,7 @@ function getColorFor(tag) {
   return colorMap[tag];
 }
 
-// Fetch and enrich data
+// Fetch data
 async function fetchData() {
   const res = await fetch(`${AIRTABLE_URL}?view=Grid%20view&filterByFormula=Approved`, {
     headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
@@ -66,7 +65,7 @@ async function fetchData() {
   createMarkers(enrichedRecords.filter(Boolean));
 }
 
-// Geocode missing coordinates
+// Geocode missing
 async function geocodeAndSaveMissingCoords(record) {
   if (!record.Address) return null;
 
@@ -93,19 +92,20 @@ async function geocodeAndSaveMissingCoords(record) {
     record.Longitude = lng;
     return record;
   } catch (error) {
-    console.error('Geocoding failed for:', record.Address, error);
+    console.error('Geocoding failed:', record.Address, error);
     return null;
   }
 }
 
-// Create markers with icons
+// Create markers + build legend + build searchable directory
 function createMarkers(data) {
   allMarkers.forEach(m => m.remove());
   allMarkers = [];
 
   const tagGroups = {};
+  const groupedOptions = {};
 
-  data.forEach(row => {
+  data.forEach((row, index) => {
     const lat = parseFloat(row.Latitude);
     const lng = parseFloat(row.Longitude);
     if (isNaN(lat) || isNaN(lng)) return;
@@ -125,7 +125,7 @@ function createMarkers(data) {
 
     const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
       <div style="max-width: 250px;">
-        ${imageUrl ? `<img src="${imageUrl}" alt="${row["Org Name"] || "Image"}" style="width: 100%; height: auto; margin-bottom: 10px;">` : ''}
+        ${imageUrl ? `<img src="${imageUrl}" alt="${row["Org Name"]}" style="width: 100%; margin-bottom: 10px;">` : ''}
         <h3>${row["Org Name"] || "Untitled"}</h3>
         ${row.Description ? `<p>${row.Description}</p>` : ''}
         ${row.Address ? `<p><b>Address:</b><br>${row.Address}</p>` : ''}
@@ -143,67 +143,27 @@ function createMarkers(data) {
     marker.rowData = row;
     allMarkers.push(marker);
 
+    // Group by tag
     tags.forEach(tag => {
       if (!tagGroups[tag]) tagGroups[tag] = [];
       tagGroups[tag].push(marker);
-
-      // 1. Track categories
-const groupedOptions = {}; // tag => [<option>, <option>, ...]
-
-data.forEach((row, index) => {
-  const tags = (row.Tags || "").split(',').map(t => t.trim()).filter(Boolean);
-  const primaryTag = tags[0] || 'Uncategorized';
-
-  const option = document.createElement('option');
-  option.value = index;
-  option.textContent = row["Org Name"] || "Unnamed";
-
-  if (!groupedOptions[primaryTag]) groupedOptions[primaryTag] = [];
-  groupedOptions[primaryTag].push(option);
-});
-
-const select = document.getElementById('org-directory');
-select.innerHTML = '<option value="">Select an organization...</option>';
-
-Object.entries(groupedOptions)
-  .sort(([a], [b]) => a.localeCompare(b)) // sort groups alphabetically
-  .forEach(([tag, options]) => {
-    const group = document.createElement('optgroup');
-    group.label = tag;
-
-    options.sort((a, b) => a.textContent.localeCompare(b.textContent)); // sort names
-    options.forEach(opt => group.appendChild(opt));
-
-    select.appendChild(group);
-  });
-
-
     });
+
+    // Grouped select dropdown
+    if (!groupedOptions[primaryTag]) groupedOptions[primaryTag] = [];
+    groupedOptions[primaryTag].push({ label: row["Org Name"] || "Unnamed", index });
   });
 
-  document.getElementById('org-directory').addEventListener('change', function (e) {
-  const index = parseInt(e.target.value);
-  if (isNaN(index)) return;
-
-  const marker = allMarkers[index];
-  map.flyTo({ center: marker.getLngLat(), zoom: 15, essential: true });
-  marker.togglePopup();
-});
-
-
-  
   buildLegend(tagGroups);
-
+  buildDirectory(groupedOptions);
 }
 
-
-// Build legend
 function buildLegend(tagGroups) {
   const container = document.getElementById('legend-content');
   container.innerHTML = '';
 
   Object.entries(tagGroups).forEach(([tag, markers]) => {
-    const iconKey = iconMap[tag] || 'default'; // ✅ define iconKey here
+    const iconKey = iconMap[tag] || 'default';
 
     const section = document.createElement('div');
     section.className = 'legend-category';
@@ -218,7 +178,6 @@ function buildLegend(tagGroups) {
     markers.forEach(marker => {
       const li = document.createElement('li');
 
-      // ✅ Now iconKey is defined correctly
       const icon = document.createElement('img');
       icon.src = `icons/${iconKey}.png`;
       icon.alt = `${tag} icon`;
@@ -255,46 +214,46 @@ function buildLegend(tagGroups) {
   });
 }
 
+function buildDirectory(groupedOptions) {
+  const select = document.getElementById('org-directory');
+  select.innerHTML = '<option value="">Select an organization...</option>';
 
-// Legend panel toggle
-const legendToggle = document.getElementById('legend-toggle');
-const legendArrow = document.getElementById('legend-arrow');
-const legendContent = document.getElementById('legend-content');
+  Object.entries(groupedOptions)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .forEach(([groupName, items]) => {
+      const group = document.createElement('optgroup');
+      group.label = groupName;
 
-let legendCollapsed = false;
+      items.sort((a, b) => a.label.localeCompare(b.label));
+      items.forEach(({ label, index }) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = label;
+        group.appendChild(option);
+      });
 
-legendToggle.addEventListener('click', () => {
-  legendCollapsed = !legendCollapsed;
-  legendContent.style.display = legendCollapsed ? 'none' : 'block';
-  legendArrow.textContent = legendCollapsed ? '▸' : '▾';
+      select.appendChild(group);
+    });
+
+  // Activate Select2 after DOM update
+  $('#org-directory').select2({
+    placeholder: "Search organizations...",
+    allowClear: true,
+    width: 'resolve'
+  });
+}
+
+// Handle dropdown selection
+document.getElementById('org-directory').addEventListener('change', function (e) {
+  const index = parseInt(e.target.value);
+  if (isNaN(index)) return;
+
+  const marker = allMarkers[index];
+  map.flyTo({ center: marker.getLngLat(), zoom: 15, essential: true });
+  marker.togglePopup();
 });
 
-// Search bar
-document.getElementById('search-input').addEventListener('keydown', async (e) => {
-  if (e.key === 'Enter') {
-    const query = e.target.value.trim();
-    if (!query) return;
-
-    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${mapboxgl.accessToken}`;
-
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-
-      if (data.features && data.features.length > 0) {
-        const [lng, lat] = data.features[0].center;
-        map.flyTo({ center: [lng, lat], zoom: 14 });
-      } else {
-        alert('Address not found.');
-      }
-    } catch (err) {
-      console.error('Geocoding error:', err);
-      alert('There was a problem searching. Try again.');
-    }
-  }
-});
-
-// Map load logic
+// Map load
 map.on('load', () => {
   Object.values(iconMap).forEach(iconName => {
     map.loadImage(`icons/${iconName}.png`, (error, image) => {
@@ -308,15 +267,6 @@ map.on('load', () => {
 
   fetchData();
 
-  $(document).ready(() => {
-  $('#org-directory').select2({
-    placeholder: "Search organizations...",
-    allowClear: true
-  });
-});
-
-
-  // Subway lines
   map.addSource('subway-lines', {
     type: 'geojson',
     data: 'nyc-subway-routes.geojson'
@@ -357,7 +307,7 @@ map.on('load', () => {
   });
 });
 
-// Controls & overlay logic
+// UI toggle logic
 map.addControl(new mapboxgl.NavigationControl({ showCompass: true }), 'top-right');
 
 document.getElementById('close-intro').addEventListener('click', () => {
@@ -380,13 +330,3 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleBtn.textContent = wrapper.classList.contains('collapsed') ? '▲' : '▼';
   });
 });
-
-document.getElementById('org-directory').addEventListener('change', function (e) {
-  const index = parseInt(e.target.value);
-  if (isNaN(index)) return;
-
-  const marker = allMarkers[index];
-  map.flyTo({ center: marker.getLngLat(), zoom: 15, essential: true });
-  marker.togglePopup();
-});
-
