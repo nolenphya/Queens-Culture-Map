@@ -18,15 +18,15 @@ const iconMap = {
   'Community Garden': 'community-garden',
   'Gallery': 'gallery',
   'Museum/Cultural Institution': 'museum',
-  'Music Group/Vocal Ensemble': 'music-group-vocal-ensemble',
+  'Music Group/Vocal Ensembles': 'music-group-vocal-ensemble',
   'Dance Company': 'dance-studio',
   'Multidisciplinary Arts Center': 'multidisciplinary-arts-center',
   'Community Center': 'community-center',
   'Theatre': 'theatre',
-  'Video/Film Company': 'video-film-company',
-  'Art Center/Studio': 'art-center-studio',
+  'Video-Film Company': 'video-film-company',
+  'Art Center-Studio': 'art-center-studio',
   'Cultural Arts Center': 'cultural-arts-center',
-  'Historic Society/Preservation Group': 'archive'
+  'Historical Society-Preservation Group': 'archive'
 };
 
 // Globals
