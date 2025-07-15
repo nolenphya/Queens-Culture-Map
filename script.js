@@ -235,12 +235,26 @@ function buildDirectory(groupedOptions) {
       select.appendChild(group);
     });
 
-  // Activate Select2 after DOM update
-  $('#org-directory').select2({
-    placeholder: "Search organizations...",
-    allowClear: true,
-    width: 'resolve'
-  });
+  document.getElementById('search-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const query = e.target.value.trim().toLowerCase();
+    if (!query) return;
+
+    const match = allMarkers.find(marker => {
+      const name = (marker.rowData["Org Name"] || "").toLowerCase();
+      const tags = (marker.rowData.Tags || "").toLowerCase();
+      return name.includes(query) || tags.includes(query);
+    });
+
+    if (match) {
+      map.flyTo({ center: match.getLngLat(), zoom: 15, essential: true });
+      match.togglePopup();
+    } else {
+      alert("No matching organization or tag found.");
+    }
+  }
+});
+
 }
 
 // Handle dropdown selection
