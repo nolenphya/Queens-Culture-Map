@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Queens Culture Map</title>
 
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
   <!-- Mapbox GL -->
@@ -14,6 +17,7 @@
   <!-- Styles -->
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
   <!-- Intro Overlay -->
@@ -60,7 +64,12 @@
     </div>
 
     <div id="address-search">
-      <input type="text" id="search-input" placeholder="Search address..." />
+   <label for="org-directory">Search the directory:</label>
+<select id="org-directory" style="width: 100%;">
+  <option value="">Loading organizations...</option>
+</select>
+
+
     </div>
 <br/><br/>
     <div id="legend-wrapper">
@@ -73,5 +82,9 @@
 
   <!-- Scripts -->
   <script src="script.js"></script>
+  <!-- jQuery + Select2 JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 </body>
 </html>
