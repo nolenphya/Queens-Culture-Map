@@ -155,8 +155,28 @@ function createMarkers(data) {
   });
 
   buildLegend(tagGroups);
-  buildDirectory(groupedOptions);
 }
+
+document.getElementById('search-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const query = e.target.value.trim().toLowerCase();
+    if (!query) return;
+
+    const match = allMarkers.find(marker => {
+      const name = (marker.rowData["Org Name"] || "").toLowerCase();
+      const tags = (marker.rowData.Tags || "").toLowerCase();
+      return name.includes(query) || tags.includes(query);
+    });
+
+    if (match) {
+      map.flyTo({ center: match.getLngLat(), zoom: 15, essential: true });
+      match.togglePopup(); // ensure popup is toggled open
+    } else {
+      alert("No matching organization or tag found.");
+    }
+  }
+});
+
 
 function buildLegend(tagGroups) {
   const container = document.getElementById('legend-content');
@@ -214,58 +234,6 @@ function buildLegend(tagGroups) {
   });
 }
 
-function buildDirectory(groupedOptions) {
-  const select = document.getElementById('org-directory');
-  select.innerHTML = '<option value="">Select an organization...</option>';
-
-  Object.entries(groupedOptions)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .forEach(([groupName, items]) => {
-      const group = document.createElement('optgroup');
-      group.label = groupName;
-
-      items.sort((a, b) => a.label.localeCompare(b.label));
-      items.forEach(({ label, index }) => {
-        const option = document.createElement('option');
-        option.value = index;
-        option.textContent = label;
-        group.appendChild(option);
-      });
-
-      select.appendChild(group);
-    });
-
-  document.getElementById('search-input').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    const query = e.target.value.trim().toLowerCase();
-    if (!query) return;
-
-    const match = allMarkers.find(marker => {
-      const name = (marker.rowData["Org Name"] || "").toLowerCase();
-      const tags = (marker.rowData.Tags || "").toLowerCase();
-      return name.includes(query) || tags.includes(query);
-    });
-
-    if (match) {
-      map.flyTo({ center: match.getLngLat(), zoom: 15, essential: true });
-      match.togglePopup();
-    } else {
-      alert("No matching organization or tag found.");
-    }
-  }
-});
-
-}
-
-// Handle dropdown selection
-document.getElementById('org-directory').addEventListener('change', function (e) {
-  const index = parseInt(e.target.value);
-  if (isNaN(index)) return;
-
-  const marker = allMarkers[index];
-  map.flyTo({ center: marker.getLngLat(), zoom: 15, essential: true });
-  marker.togglePopup();
-});
 
 // Map load
 map.on('load', () => {
