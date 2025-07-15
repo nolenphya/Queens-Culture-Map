@@ -209,6 +209,56 @@ document.getElementById('search-input').addEventListener('keydown', (e) => {
   }
 });
 
+document.getElementById('search-input').addEventListener('input', (e) => {
+  const query = e.target.value.trim().toLowerCase();
+  const resultsContainer = document.getElementById('search-results');
+  resultsContainer.innerHTML = ''; // Clear previous results
+
+  if (!query) return;
+
+  const matches = allMarkers.filter(marker => {
+    const name = (marker.rowData["Org Name"] || "").toLowerCase();
+    const tags = (marker.rowData.Tags || "").toLowerCase();
+    return name.includes(query) || tags.includes(query);
+  });
+
+  if (matches.length === 0) {
+    resultsContainer.innerHTML = '<p>No matches found.</p>';
+    return;
+  }
+
+  const list = document.createElement('ul');
+  list.style.padding = '0';
+  list.style.listStyle = 'none';
+
+  matches.forEach(marker => {
+    const li = document.createElement('li');
+    li.style.marginBottom = '6px';
+
+    const link = document.createElement('a');
+    link.href = '#';
+    link.textContent = marker.rowData["Org Name"] || "Unnamed";
+    link.style.textDecoration = 'underline';
+    link.style.color = '#007bff';
+
+    link.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      map.flyTo({ center: marker.getLngLat(), zoom: 15, essential: true });
+      marker.togglePopup();
+    });
+
+    li.appendChild(link);
+    list.appendChild(li);
+  });
+
+  resultsContainer.appendChild(list);
+});
+
+if (!query) {
+  resultsContainer.innerHTML = '';
+  return;
+}
+
 
 document.getElementById('search-input').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
