@@ -146,12 +146,56 @@ function createMarkers(data) {
     tags.forEach(tag => {
       if (!tagGroups[tag]) tagGroups[tag] = [];
       tagGroups[tag].push(marker);
+
+      // 1. Track categories
+const groupedOptions = {}; // tag => [<option>, <option>, ...]
+
+data.forEach((row, index) => {
+  const tags = (row.Tags || "").split(',').map(t => t.trim()).filter(Boolean);
+  const primaryTag = tags[0] || 'Uncategorized';
+
+  const option = document.createElement('option');
+  option.value = index;
+  option.textContent = row["Org Name"] || "Unnamed";
+
+  if (!groupedOptions[primaryTag]) groupedOptions[primaryTag] = [];
+  groupedOptions[primaryTag].push(option);
+});
+
+const select = document.getElementById('org-directory');
+select.innerHTML = '<option value="">Select an organization...</option>';
+
+Object.entries(groupedOptions)
+  .sort(([a], [b]) => a.localeCompare(b)) // sort groups alphabetically
+  .forEach(([tag, options]) => {
+    const group = document.createElement('optgroup');
+    group.label = tag;
+
+    options.sort((a, b) => a.textContent.localeCompare(b.textContent)); // sort names
+    options.forEach(opt => group.appendChild(opt));
+
+    select.appendChild(group);
+  });
+
+
     });
   });
 
+  document.getElementById('org-directory').addEventListener('change', function (e) {
+  const index = parseInt(e.target.value);
+  if (isNaN(index)) return;
+
+  const marker = allMarkers[index];
+  map.flyTo({ center: marker.getLngLat(), zoom: 15, essential: true });
+  marker.togglePopup();
+});
+
+
+  
   buildLegend(tagGroups);
 
 }
+
 
 // Build legend
 function buildLegend(tagGroups) {
@@ -264,6 +308,14 @@ map.on('load', () => {
 
   fetchData();
 
+  $(document).ready(() => {
+  $('#org-directory').select2({
+    placeholder: "Search organizations...",
+    allowClear: true
+  });
+});
+
+
   // Subway lines
   map.addSource('subway-lines', {
     type: 'geojson',
@@ -328,3 +380,13 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleBtn.textContent = wrapper.classList.contains('collapsed') ? '▲' : '▼';
   });
 });
+
+document.getElementById('org-directory').addEventListener('change', function (e) {
+  const index = parseInt(e.target.value);
+  if (isNaN(index)) return;
+
+  const marker = allMarkers[index];
+  map.flyTo({ center: marker.getLngLat(), zoom: 15, essential: true });
+  marker.togglePopup();
+});
+
