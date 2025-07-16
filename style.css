@@ -212,7 +212,7 @@ body, html {
 #info-button {
   position: absolute;
   top: 110px; /* Below Mapbox controls */
-  right: 12px;
+  right: 13.5px;
   z-index: 1000;
   background: #fff;
   border: 1px solid #ccc;
