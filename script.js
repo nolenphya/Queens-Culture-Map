@@ -254,10 +254,6 @@ document.getElementById('search-input').addEventListener('input', (e) => {
   resultsContainer.appendChild(list);
 });
 
-if (!query) {
-  resultsContainer.innerHTML = '';
-  return;
-}
 
 
 document.getElementById('search-input').addEventListener('keydown', (e) => {
