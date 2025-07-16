@@ -411,11 +411,11 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleBtn.textContent = wrapper.classList.contains('collapsed') ? '▲' : '▼';
 
     document.getElementById('info-button').addEventListener('click', () => {
-  document.getElementById('info-overlay').style.display = 'flex';
+  document.getElementById('map-guide-overlay').style.display = 'flex';
 });
 
-document.getElementById('info-close').addEventListener('click', () => {
-  document.getElementById('info-overlay').style.display = 'none';
+document.getElementById('map-guide-close').addEventListener('click', () => {
+  document.getElementById('map-guide-overlay').style.display = 'none';
 });
 
   });

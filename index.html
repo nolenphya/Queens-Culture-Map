@@ -45,6 +45,7 @@
         If you’d like to add your organization to the map, please fill out this form.
         <br/><br/>
         <div class="logos">
+          
   <img src="fthlogo.png" alt="FTH Logo" class="logo">
   <img src="nyslogo.png" alt="NYS Logo" class="logo">
         </div>
@@ -52,6 +53,23 @@
       <button id="close-intro">Get Started</button>
     </div>
   </div>
+
+<!-- Map Guide Overlay -->
+<div id="map-guide-overlay" class="map-guide-overlay" style="display: none;">
+  <div class="map-guide-content">
+    <span id="map-guide-close">×</span>
+    <h2>How to Use the Queens Cultural Map</h2>
+    <p>This guide helps you get started:</p>
+    <ul style="text-align: left;">
+      <li>🖱️ Click markers to view organizations</li>
+      <li>🔍 Use the search bar to find names or tags</li>
+      <li>🗺️ Use the legend to filter by category</li>
+      <li>📍Click an org name in the legend or results to zoom in</li>
+    </ul>
+    <p>Have a question? <a href="mailto:info@example.org">Contact us</a></p>
+  </div>
+</div>
+
 
   <!-- Map -->
   <div id="map"></div>
@@ -86,14 +104,6 @@
   <!-- jQuery + Select2 JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-<!-- Info Overlay -->
-<div id="info-overlay" style="display: none;">
-  <div class="info-content">
-    <span id="info-close">×</span>
-    <img src="info.png" alt="Map Guide" />
-  </div>
-</div>
 
 </body>
 </html>
