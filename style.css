@@ -208,3 +208,59 @@ body, html {
   margin: 10px;
   display: inline-block;
 }
+
+#info-button {
+  position: absolute;
+  top: 100px; /* Below Mapbox controls */
+  right: 10px;
+  z-index: 1000;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+#info-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.info-content {
+  position: relative;
+  background: white;
+  padding: 20px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+  border-radius: 10px;
+}
+
+.info-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+#info-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}

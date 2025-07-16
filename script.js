@@ -405,9 +405,18 @@ intro.addEventListener('touchmove', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
   const toggleBtn = document.getElementById('legend-toggle');
   const wrapper = document.getElementById('legend-wrapper');
-
+  
   toggleBtn.addEventListener('click', () => {
     wrapper.classList.toggle('collapsed');
     toggleBtn.textContent = wrapper.classList.contains('collapsed') ? '▲' : '▼';
+
+    document.getElementById('info-button').addEventListener('click', () => {
+  document.getElementById('info-overlay').style.display = 'flex';
+});
+
+document.getElementById('info-close').addEventListener('click', () => {
+  document.getElementById('info-overlay').style.display = 'none';
+});
+
   });
 });

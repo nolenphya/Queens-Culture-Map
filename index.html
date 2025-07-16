@@ -56,6 +56,9 @@
   <!-- Map -->
   <div id="map"></div>
 
+  <!-- ⓘ Button -->
+<button id="info-button" title="Map Guide">ⓘ</button>
+
   <!-- Legend Panel -->
   <div id="legend-panel">
     <div class="legend-header">
@@ -83,6 +86,14 @@
   <!-- jQuery + Select2 JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<!-- Info Overlay -->
+<div id="info-overlay" style="display: none;">
+  <div class="info-content">
+    <span id="info-close">×</span>
+    <img src="info.png" alt="Map Guide" />
+  </div>
+</div>
 
 </body>
 </html>
