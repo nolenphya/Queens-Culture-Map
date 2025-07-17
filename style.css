@@ -8,10 +8,11 @@ body, html {
 
 #map {
   position: absolute;
-  top: 0;
+  top: 70px; /* or the height of your header */
   bottom: 0;
   width: 100%;
 }
+
 
 /* Intro Overlay */
 #intro-overlay {
@@ -295,6 +296,7 @@ body, html {
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 4px;
+  align-self: center;   /* makes sure it aligns vertically with the header */
 }
 
 #info-button:hover {
