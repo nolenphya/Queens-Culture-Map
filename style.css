@@ -227,23 +227,6 @@ body, html {
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-#info-button {
-  position: top right;
-  top: 150px; /* Adjust to sit under zoom buttons */
-  right: 20px;
-  z-index: 1000;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: white;
-  border: 1px solid #ccc;
-  font-size: 18px;
-  text-align: center;
-  line-height: 30px;
-  cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
 .map-guide-overlay {
   position: fixed;
   top: 0;
@@ -276,4 +259,44 @@ body, html {
   right: 12px;
   font-size: 24px;
   cursor: pointer;
+}
+
+#site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc;
+  z-index: 1001;
+  position: relative;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+#fth-logo {
+  height: 40px;
+  margin-right: 12px;
+}
+
+#site-header h1 {
+  font-size: 20px;
+  margin: 0;
+  font-family: 'Roboto Mono', monospace;
+}
+
+#info-button {
+  font-size: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+#info-button:hover {
+  background: #eee;
 }
