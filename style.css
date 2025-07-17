@@ -211,8 +211,8 @@ body, html {
 
 #info-button {
   position: absolute;
-  top: 110px; /* Below Mapbox controls */
-  right: 14px;
+  top: 90px; /* Below Mapbox controls */
+  right: 8px;
   z-index: 1000;
   background: #fff;
   border: 1px solid #ccc;
@@ -228,7 +228,7 @@ body, html {
 }
 
 #info-button {
-  position: absolute;
+  position: top right;
   top: 100px; /* Adjust to sit under zoom buttons */
   right: 10px;
   z-index: 1000;

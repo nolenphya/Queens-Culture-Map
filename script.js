@@ -410,13 +410,13 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.classList.toggle('collapsed');
     toggleBtn.textContent = wrapper.classList.contains('collapsed') ? '▲' : '▼';
 
-    document.getElementById('info-button').addEventListener('click', () => {
+  });
+});
+
+  document.getElementById('info-button').addEventListener('click', () => {
   document.getElementById('map-guide-overlay').style.display = 'flex';
 });
 
 document.getElementById('map-guide-close').addEventListener('click', () => {
   document.getElementById('map-guide-overlay').style.display = 'none';
-});
-
-  });
 });
