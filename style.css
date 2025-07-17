@@ -229,8 +229,8 @@ body, html {
 
 #info-button {
   position: top right;
-  top: 70px; /* Adjust to sit under zoom buttons */
-  right: 8px;
+  top: 150px; /* Adjust to sit under zoom buttons */
+  right: 20px;
   z-index: 1000;
   width: 32px;
   height: 32px;
