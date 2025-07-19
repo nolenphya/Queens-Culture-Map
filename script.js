@@ -1,13 +1,13 @@
 // Mapbox Setup
-document.addEventListener('DOMContentLoaded', () => {
+
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/flushingtownhall/cma3bhpb4000l01qwf955dtqx',
+  style: 'style: 'mapbox://styles/mapbox/navigation-night-v1'',
   center: [-73.94, 40.73],
   zoom: 11
 });
-});
+
 
 // Airtable Setup
 const AIRTABLE_API_KEY = 'patboskAQTJUi9FlQ.1c30c3c632cd4d7bd03cf949e50edd922425aba8dcbf0c8a6002e98db67c74a3';
