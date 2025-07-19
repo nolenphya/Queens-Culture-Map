@@ -1,10 +1,12 @@
 // Mapbox Setup
+document.addEventListener('DOMContentLoaded', () => {
 mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/flushingtownhall/cma3bhpb4000l01qwf955dtqx',
   center: [-73.94, 40.73],
   zoom: 11
+});
 });
 
 // Airtable Setup
@@ -345,6 +347,10 @@ map.on('load', () => {
       }
     });
   });
+
+  map.on('load', () => {
+  console.log('Current style:', map.getStyle());
+});
 
   fetchData();
 
