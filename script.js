@@ -348,10 +348,6 @@ map.on('load', () => {
     });
   });
 
-  map.on('load', () => {
-  console.log('Current style:', map.getStyle());
-});
-
   fetchData();
 
   map.addSource('subway-lines', {
