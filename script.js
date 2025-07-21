@@ -320,13 +320,13 @@ function buildLegend(tagGroups) {
       section.className = 'legend-category';
 
       const header = document.createElement('h4');
-      header.innerHTML = `<span class="arrow">▸</span> ${tag}`;
+      header.innerHTML = `<span class="arrow">▾</span> ${tag}`;
       header.style.cursor = 'pointer';
 
       // Create org list and collapse it by default
       const list = document.createElement('ul');
       list.className = 'legend-org-list';
-      list.style.display = 'none'; // Initially collapsed
+      list.style.display = 'block'; // Initially collapsed
 
       // Create each marker entry under this tag
       markers.forEach(marker => {
@@ -381,6 +381,17 @@ function buildLegend(tagGroups) {
     });
 }
 
+document.getElementById('reset-legend').addEventListener('click', () => {
+  // Check all checkboxes
+  document.querySelectorAll('.legend-org-list input[type="checkbox"]').forEach(checkbox => {
+    checkbox.checked = true;
+  });
+
+  // Show all markers
+  allMarkers.forEach(marker => {
+    marker.getElement().style.display = 'block';
+  });
+});
 
 
 // Map load
