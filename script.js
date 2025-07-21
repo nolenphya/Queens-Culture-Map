@@ -123,6 +123,23 @@ function createMarkers(data) {
     el.style.backgroundSize = 'contain';
     el.style.backgroundRepeat = 'no-repeat';
 
+     // ✅ Add label here, where `row` is defined
+  const label = document.createElement('div');
+  label.className = 'marker-label';
+  label.innerText = row["Org Name"] || "Unnamed";
+  label.style.position = 'absolute';
+  label.style.top = '36px';
+  label.style.left = '50%';
+  label.style.transform = 'translateX(-50%)';
+  label.style.whiteSpace = 'nowrap';
+  label.style.backgroundColor = 'rgba(255,255,255,0.8)';
+  label.style.padding = '2px 6px';
+  label.style.borderRadius = '4px';
+  label.style.fontSize = '12px';
+  label.style.display = 'none';
+
+  el.appendChild(label);
+
     const imageUrl = Array.isArray(row.Image) && row.Image.length > 0 ? row.Image[0].url : '';
 
     const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
@@ -155,26 +172,6 @@ function createMarkers(data) {
     if (!groupedOptions[primaryTag]) groupedOptions[primaryTag] = [];
     groupedOptions[primaryTag].push({ label: row["Org Name"] || "Unnamed", index });
   });
-
-const label = document.createElement('div');
-label.className = 'marker-label';
-label.innerText = row["Org Name"] || "Unnamed";
-label.style.position = 'absolute';
-label.style.top = '36px';
-label.style.left = '50%';
-label.style.transform = 'translateX(-50%)';
-label.style.whiteSpace = 'nowrap';
-label.style.backgroundColor = 'rgba(255,255,255,0.8)';
-label.style.padding = '2px 6px';
-label.style.borderRadius = '4px';
-label.style.fontSize = '12px';
-label.style.display = 'none'; // initially hidden
-
-el.appendChild(label);
-
-// Store reference to the label so we can toggle it later
-marker.labelElement = label;
-
 
   buildLegend(tagGroups);
 }
@@ -413,9 +410,9 @@ map.on('load', () => {
   });
 
   map.addLayer({
-    id: 'subway-stations-layer',
+    id: 'subway-stations-stops',
     type: 'circle',
-    source: 'subway-stations',
+    source: 'subway-stops',
     paint: {
       'circle-radius': 1,
       'circle-color': '#ffffff',
