@@ -311,57 +311,76 @@ function buildLegend(tagGroups) {
   const container = document.getElementById('legend-content');
   container.innerHTML = '';
 
-  Object.entries(tagGroups).forEach(([tag, markers]) => {
-    const iconKey = iconMap[tag] || 'default';
+  Object.entries(tagGroups)
+    .sort(([a], [b]) => a.localeCompare(b)) // Alphabetize tags
+    .forEach(([tag, markers]) => {
+      const iconKey = iconMap[tag] || 'default';
 
-    const section = document.createElement('div');
-    section.className = 'legend-category';
+      const section = document.createElement('div');
+      section.className = 'legend-category';
 
-    const header = document.createElement('h4');
-    header.innerHTML = `<span class="arrow">▾</span> ${tag}`;
-    section.appendChild(header);
+      const header = document.createElement('h4');
+      header.innerHTML = `<span class="arrow">▸</span> ${tag}`;
+      header.style.cursor = 'pointer';
 
-    const list = document.createElement('ul');
-    list.className = 'legend-org-list';
+      // Create org list and collapse it by default
+      const list = document.createElement('ul');
+      list.className = 'legend-org-list';
+      list.style.display = 'none'; // Initially collapsed
 
-    markers.forEach(marker => {
-      const li = document.createElement('li');
+      // Create each marker entry under this tag
+      markers.forEach(marker => {
+        const li = document.createElement('li');
 
-      const icon = document.createElement('img');
-      icon.src = `icons/${iconKey}.png`;
-      icon.alt = `${tag} icon`;
-      icon.style.width = '20px';
-      icon.style.height = '20px';
-      icon.style.marginRight = '6px';
-      icon.style.verticalAlign = 'middle';
+        const icon = document.createElement('img');
+        icon.src = `icons/${iconKey}.png`;
+        icon.alt = `${tag} icon`;
+        icon.style.width = '20px';
+        icon.style.height = '20px';
+        icon.style.marginRight = '6px';
+        icon.style.verticalAlign = 'middle';
 
-      const label = document.createElement('span');
-      label.textContent = marker.rowData["Org Name"] || "Unnamed";
-      label.style.cursor = 'pointer';
-      label.style.textDecoration = 'underline';
+        const label = document.createElement('span');
+        label.textContent = marker.rowData["Org Name"] || "Unnamed";
+        label.style.cursor = 'pointer';
+        label.style.textDecoration = 'underline';
 
-      label.addEventListener('click', () => {
-        map.flyTo({ center: marker.getLngLat(), zoom: 15, essential: true });
-        marker.togglePopup();
+        label.addEventListener('click', () => {
+          map.flyTo({ center: marker.getLngLat(), zoom: 15, essential: true });
+          marker.togglePopup();
+        });
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = true;
+        checkbox.addEventListener('change', () => {
+          marker.getElement().style.display = checkbox.checked ? 'block' : 'none';
+        });
+
+        li.appendChild(checkbox);
+        li.appendChild(icon);
+        li.appendChild(label);
+        list.appendChild(li);
       });
 
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = true;
-      checkbox.addEventListener('change', () => {
-        marker.getElement().style.display = checkbox.checked ? 'block' : 'none';
+      // Toggle visibility and marker display
+      header.addEventListener('click', () => {
+        const collapsed = list.style.display === 'none';
+        list.style.display = collapsed ? 'block' : 'none';
+        header.querySelector('.arrow').textContent = collapsed ? '▾' : '▸';
+
+        // Show/hide all markers in this tag group
+        markers.forEach(marker => {
+          marker.getElement().style.display = collapsed ? 'block' : 'none';
+        });
       });
 
-      li.appendChild(checkbox);
-      li.appendChild(icon);
-      li.appendChild(label);
-      list.appendChild(li);
+      section.appendChild(header);
+      section.appendChild(list);
+      container.appendChild(section);
     });
-
-    section.appendChild(list);
-    container.appendChild(section);
-  });
 }
+
 
 
 // Map load
