@@ -159,6 +159,7 @@ function createMarkers(data) {
       .setPopup(popup)
       .addTo(map);
 
+    marker.labelElement = label; // ✅ Store for zoom visibility toggling
     marker.rowData = row;
     allMarkers.push(marker);
 
