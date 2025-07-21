@@ -156,8 +156,38 @@ function createMarkers(data) {
     groupedOptions[primaryTag].push({ label: row["Org Name"] || "Unnamed", index });
   });
 
+const label = document.createElement('div');
+label.className = 'marker-label';
+label.innerText = row["Org Name"] || "Unnamed";
+label.style.position = 'absolute';
+label.style.top = '36px';
+label.style.left = '50%';
+label.style.transform = 'translateX(-50%)';
+label.style.whiteSpace = 'nowrap';
+label.style.backgroundColor = 'rgba(255,255,255,0.8)';
+label.style.padding = '2px 6px';
+label.style.borderRadius = '4px';
+label.style.fontSize = '12px';
+label.style.display = 'none'; // initially hidden
+
+el.appendChild(label);
+
+// Store reference to the label so we can toggle it later
+marker.labelElement = label;
+
+
   buildLegend(tagGroups);
 }
+
+map.on('zoom', () => {
+  const zoomLevel = map.getZoom();
+  allMarkers.forEach(marker => {
+    if (marker.labelElement) {
+      marker.labelElement.style.display = zoomLevel >= 14 ? 'block' : 'none';
+    }
+  });
+});
+
 
 document.getElementById('search-input').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
@@ -375,6 +405,11 @@ map.on('load', () => {
         '#000000'
       ]
     }
+  });
+
+  map.addSource('subway-stops', {
+    type: 'geojson',
+    data: 'nyc-subway-stops.geojson'
   });
 
   map.addLayer({

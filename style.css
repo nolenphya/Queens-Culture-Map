@@ -281,3 +281,8 @@ body, html {
 #info-button:hover {
   background: #eee;
 }
+
+.marker-label {
+  pointer-events: none;
+  font-family: Roboto, sans-serif;
+}
