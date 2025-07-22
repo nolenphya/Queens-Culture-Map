@@ -58,11 +58,11 @@ body, html {
 /* Legend Panel */
 #legend-panel {
   position: absolute; /* or fixed if you prefer it always visible */
-  top: 80px; /* Adjust to match your header height */
+  top: 100px; /* Adjust to match your header height */
   left: 10px;
   z-index: 10;
   background: white;
-  padding: 10px;
+  padding: 5px;
   border-radius: 4px;
   max-height: calc(100vh - 100px); /* Prevent it from overflowing off the screen */
   overflow-y: auto;
