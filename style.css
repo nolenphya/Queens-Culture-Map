@@ -8,8 +8,8 @@ body, html {
 
 #map {
   margin-top: 80px; /* Matches header height */
+  height: calc(100vh - 70px);
 }
-
 
 
 /* Intro Overlay */
