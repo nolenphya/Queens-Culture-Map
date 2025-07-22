@@ -65,7 +65,6 @@ body, html {
   padding: 10px;
   border-radius: 4px;
   max-height: calc(100vh - 100px); /* Prevent it from overflowing off the screen */
-  max-width: 25%;
   overflow-y: auto;
 }
 /* Legend Header */
