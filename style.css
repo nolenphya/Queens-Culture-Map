@@ -7,8 +7,9 @@ body, html {
 }
 
 #map {
-  height: calc(100vh - 70px);
+  margin-top: 80px; /* Matches header height */
 }
+
 
 
 /* Intro Overlay */
@@ -51,22 +52,16 @@ body, html {
 
 /* Legend Panel */
 #legend-panel {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 280px;
+  position: absolute; /* or fixed if you prefer it always visible */
+  top: 80px; /* Adjust to match your header height */
+  left: 10px;
+  z-index: 10;
   background: white;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 12px;
-  font-family: sans-serif;
-  font-size: 14px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  max-height: 90vh;
+  padding: 10px;
+  border-radius: 4px;
+  max-height: calc(100vh - 100px); /* Prevent it from overflowing off the screen */
   overflow-y: auto;
 }
-
 /* Legend Header */
 .legend-header {
   display: flex;
