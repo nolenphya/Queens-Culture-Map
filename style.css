@@ -66,7 +66,6 @@ body, html {
   border-radius: 4px;
   max-height: calc(100vh - 100px); /* Prevent it from overflowing off the screen */
   overflow-y: auto;
-  background-color: rgba(255, 255, 255, 0.85); /* better control */
 }
 /* Legend Header */
 .legend-header {
@@ -93,7 +92,7 @@ body, html {
 }
 
 #search-input {
-  width: 100%;
+   width: 100%;
   box-sizing: border-box;
   padding: 6px;
   font-size: 14px;
