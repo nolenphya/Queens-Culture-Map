@@ -175,31 +175,23 @@ body, html {
 
 /* Responsive Design */
 @media (max-width: 600px) {
- #legend-panel {
+   #legend-panel {
     display: flex;
     flex-direction: column;
+    height: 50vh;
     padding: 10px;
     box-sizing: border-box;
-    height: 50vh; /* controls total size */
   }
 
   #legend-wrapper {
     flex-grow: 1;
-    overflow: hidden;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   #legend-content {
-    overflow-y: auto;
-    height: 100%;
-    -webkit-overflow-scrolling: touch;
-     max-height: calc(50vh - 100px); /* adjust offset to fit header/search/buttons */
-  }
-
-  .legend-header,
-  #address-search,
-  #legend-wrapper {
-    width: 100%;
-    box-sizing: border-box;
+    height: auto; /* Let the wrapper control scroll */
+    max-height: none;
   }
 
   #search-input {
