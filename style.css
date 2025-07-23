@@ -182,17 +182,19 @@ body, html {
     left: 0;
     right: 0;
     height: 50vh;
-    width: 100%;
-    z-index: 1000;
     background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.15);
     display: flex;
     flex-direction: column;
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
-    border-radius: 12px 12px 0 0;
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+    transform: translateY(0);
   }
 
-   #legend-panel.collapsed {
-    transform: translateY(100%);
+
+   #legend-panel.collapsed + #legend-toggle {
+    bottom: 10px; /* pull it closer to the bottom when legend is hidden */
   }
 
 
@@ -207,14 +209,18 @@ body, html {
     max-height: none;
   }
 
-  #legend-toggle {
-    position: absolute;
-    top: -36px;
-    right: 20px;
-    border-radius: 12px 12px 0 0;
-    padding: 6px 12px;
+   #legend-toggle {
+    position: fixed;
+    bottom: 52vh; /* so it's above the legend when open */
+    right: 16px;
     background: #007bff;
+    color: white;
+    padding: 6px 12px;
     font-size: 14px;
+    border-radius: 6px;
+    z-index: 1100;
+    border: none;
+    transition: bottom 0.3s ease-in-out;
   }
 
   #search-input {
