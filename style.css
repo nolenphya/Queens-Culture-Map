@@ -110,18 +110,19 @@ body, html {
 
 /* Toggle Button */
 #legend-toggle {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 30px;
-  background: #333;
+  background: #007bff;
   color: white;
   border: none;
-  border-radius: 12px 12px 0 0;
-  z-index: 9999; /* ensure it's above everything */
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 20;
 }
+
 
 
 /* Collapsed State */
@@ -303,16 +304,6 @@ body, html {
 
 *, *::before, *::after {
   box-sizing: border-box;
-}
-
-#legend-toggle {
-  background: #555;
-  color: white;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
 }
 
 #legend-toggle:hover {
