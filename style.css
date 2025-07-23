@@ -226,7 +226,7 @@ body, html {
     overflow-y: auto;
     flex-grow: 1;
      -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
-      height: 100%;
+      max-height: calc(50vh - 50px); /* space for header + padding */
   }
 
   #legend-content {
