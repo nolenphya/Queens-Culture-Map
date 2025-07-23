@@ -1,6 +1,6 @@
 // Mapbox Setup
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWEzYmUzMWEwbnN3MmxwcjRyZG55ZmNxIn0.WRThoxFMtqTJQwV6Afv3ww';
+mapboxgl.accessToken = 'sk.eyJ1IjoiZmx1c2hpbmd0b3duaGFsbCIsImEiOiJjbWRmZDdpbDYwY3piMmpwbXhzZHJkMm84In0.TtKzalqbF5QBStdpypAMDQ';
 const map = new mapboxgl.Map({
   container: 'map',
  style: 'mapbox://styles/flushingtownhall/cmdcm40mc003y01rvfpyj8hh8',
