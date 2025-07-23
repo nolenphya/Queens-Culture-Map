@@ -486,9 +486,15 @@ document.getElementById('map-guide-close').addEventListener('click', () => {
   document.getElementById('map-guide-overlay').style.display = 'none';
 });
 
-document.getElementById('legend-toggle').addEventListener('click', function () {
-  const panel = document.getElementById('legend-panel');
-  panel.classList.toggle('collapsed');
+const legendPanel = document.getElementById('legend-panel');
+const legendToggle = document.getElementById('legend-toggle');
 
-  this.textContent = panel.classList.contains('collapsed') ? 'Show' : 'Hide';
+legendToggle.addEventListener('click', () => {
+  legendPanel.classList.toggle('collapsed');
+
+  if (legendPanel.classList.contains('collapsed')) {
+    legendToggle.textContent = 'Show';
+  } else {
+    legendToggle.textContent = 'Hide';
+  }
 });
