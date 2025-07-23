@@ -175,20 +175,23 @@ body, html {
 
 /* Responsive Design */
 @media (max-width: 600px) {
-  #legend-panel {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: auto;
-    width: 100%;
-    max-height: 50vh;
-    border-radius: 12px 12px 0 0;
-    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.15);
+ #legend-panel {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     padding: 10px;
     box-sizing: border-box;
+    height: 50vh; /* controls total size */
+  }
+
+  #legend-wrapper {
+    flex-grow: 1;
+    overflow: hidden;
+  }
+
+  #legend-content {
+    overflow-y: auto;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
   }
 
   .legend-header,
