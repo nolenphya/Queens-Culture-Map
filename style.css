@@ -209,12 +209,18 @@ body, html {
     transform: translateX(-50%);
     border-radius: 12px 12px 0 0;
     z-index: 20;
+    position: fixed;
+    bottom: 50vh; /* or wherever makes sense */
+
+
+
   }
 
   #legend-wrapper {
     overflow-y: auto;
     flex-grow: 1;
      -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+      height: 100%;
   }
 
   #legend-content {
