@@ -192,6 +192,7 @@ body, html {
     overflow-y: auto;
     height: 100%;
     -webkit-overflow-scrolling: touch;
+     max-height: calc(50vh - 100px); /* adjust offset to fit header/search/buttons */
   }
 
   .legend-header,
@@ -206,38 +207,6 @@ body, html {
     padding: 8px;
   }
 
-  #legend-toggle {
-    #legend-toggle {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px;
-  height: 30px;
-  background: #333;
-  color: white;
-  border: none;
-  border-radius: 12px 12px 0 0;
-  z-index: 9999; /* ensure it's above everything */
-}
-
-
-
-  }
-
-  #legend-wrapper {
-    overflow-y: auto;
-    flex-grow: 1;
-     -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
-      max-height: calc(50vh - 50px); /* space for header + padding */
-  }
-
-  #legend-content {
-    padding-bottom: 20px;
-    transition: max-height 0.3s ease-in-out;
-    overflow: hidden;
-    max-height: 1000px; /* or a safe high default */
-  }
 }
 
 
@@ -342,4 +311,18 @@ body, html {
 
 *, *::before, *::after {
   box-sizing: border-box;
+}
+
+#legend-toggle {
+  background: #555;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#legend-toggle:hover {
+  background: #333;
 }
