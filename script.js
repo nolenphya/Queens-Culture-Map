@@ -323,10 +323,10 @@ function buildLegend(tagGroups) {
       header.innerHTML = `<span class="arrow">▾</span> ${tag}`;
       header.style.cursor = 'pointer';
 
-      // Create org list and collapse it by default
+      // Create org list and expand it by default
       const list = document.createElement('ul');
       list.className = 'legend-org-list';
-      list.style.display = 'block'; // Initially collapsed
+      list.style.display = 'block'; // Initially expanded
 
       // Create each marker entry under this tag
       markers.forEach(marker => {
@@ -484,4 +484,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.getElementById('map-guide-close').addEventListener('click', () => {
   document.getElementById('map-guide-overlay').style.display = 'none';
+});
+
+document.getElementById('legend-toggle').addEventListener('click', function () {
+  const panel = document.getElementById('legend-panel');
+  panel.classList.toggle('collapsed');
+
+  this.textContent = panel.classList.contains('collapsed') ? 'Show' : 'Hide';
 });

@@ -177,12 +177,27 @@ body, html {
 /* Responsive Design */
 @media (max-width: 600px) {
    #legend-panel {
-    display: flex;
-    flex-direction: column;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     height: 50vh;
     padding: 10px;
     box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
   }
+
+   #legend-panel.collapsed {
+    transform: translateY(100%);
+  }
+
 
   #legend-wrapper {
     flex-grow: 1;
@@ -193,6 +208,19 @@ body, html {
   #legend-content {
     height: auto; /* Let the wrapper control scroll */
     max-height: none;
+  }
+
+  #legend-toggle {
+    position: absolute;
+    top: -40px;
+    right: 16px;
+    background: #007bff;
+    color: white;
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 20px 20px 0 0;
+    border: none;
+    z-index: 1001;
   }
 
   #search-input {
