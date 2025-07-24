@@ -203,13 +203,10 @@ body, html {
     -webkit-overflow-scrolling: touch;
   }
 
-   #legend-content {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    max-height: calc(50vh - 120px); /* space for header + search */
-    transition: max-height 0.3s ease;
+  #legend-content {
+    height: auto; /* Let the wrapper control scroll */
+    max-height: none;
   }
-
 
    #legend-toggle {
     position: fixed;
@@ -219,7 +216,7 @@ body, html {
     color: white;
     padding: 6px 12px;
     font-size: 14px;
-    border-radius: 4px;
+    border-radius: 6px;
     z-index: 1100;
     border: none;
     transition: bottom 0.3s ease-in-out;
@@ -236,11 +233,6 @@ body, html {
   #legend-panel.collapsed {
     transform: translateY(100%);
     transition: transform 0.3s ease-in-out;
-  }
-
-    #legend-panel.collapsed #legend-content {
-    max-height: 0;
-    overflow: hidden;
   }
 
   #legend-panel {

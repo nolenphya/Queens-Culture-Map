@@ -499,9 +499,3 @@ legendToggle.addEventListener('click', () => {
   }
 });
 
-document.getElementById("legend-toggle").addEventListener("click", function() {
-  const panel = document.getElementById("legend-panel");
-  const content = document.getElementById("legend-content");
-  panel.classList.toggle("collapsed");
-  this.textContent = panel.classList.contains("collapsed") ? "Show" : "Hide";
-});
