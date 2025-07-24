@@ -505,4 +505,3 @@ document.getElementById("legend-toggle").addEventListener("click", function() {
   this.textContent = panel.classList.contains("collapsed") ? "Show" : "Hide";
 });
 
-
