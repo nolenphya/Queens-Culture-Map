@@ -72,6 +72,7 @@ body, html {
 /* Collapsed state */
 #legend-panel.collapsed {
   max-height: 60px; /* show header only */
+  overflow: hidden;
 }
 
 /* Legend Header */

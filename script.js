@@ -491,17 +491,5 @@ const legendToggle = document.getElementById('legend-toggle');
 
 legendToggle.addEventListener('click', () => {
   legendPanel.classList.toggle('collapsed');
-
-  if (legendPanel.classList.contains('collapsed')) {
-    legendToggle.textContent = 'Show';
-  } else {
-    legendToggle.textContent = 'Hide';
-  }
+  legendToggle.textContent = legendPanel.classList.contains('collapsed') ? 'Show' : 'Hide';
 });
-
-document.getElementById("legend-toggle").addEventListener("click", function() {
-  const panel = document.getElementById("legend-panel");
-  panel.classList.toggle("collapsed");
-  this.textContent = panel.classList.contains("collapsed") ? "Show" : "Hide";
-});
-
