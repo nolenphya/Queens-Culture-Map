@@ -1,76 +1,17 @@
-/* Global Reset */
-body, html {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: 'Roboto Mono', monospace;
-}
-
-#map {
-  margin-top: 80px; /* Matches header height */
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-  z-index: 1;
-}
-
-/* Intro Overlay */
-#intro-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255, 255, 255, 0.97);
-  z-index: 10000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-y: auto;
-  padding: 20px;
-}
-
-.intro-content {
-  background: white;
-  max-width: 600px;
-  width: 100%;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  font-family: inherit;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-}
-
-#close-intro {
-  margin-top: 20px;
-  padding: 10px 16px;
-  font-size: 16px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* Legend Panel */
+/* Legend Panel - Default (Web/Desktop) */
 #legend-panel {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  max-height: 25vh; /* 25% of screen height */
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 12px 12px 0 0;
-  box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
-  transition: max-height 0.3s ease;
-  overflow: hidden;
-  z-index: 1000;
-}
-
-/* Collapsed state */
-#legend-panel.collapsed {
-  max-height: 60px; /* show header only */
+  width: 300px;
+  position: absolute;
+  top: 100px; /* below header */
+  left: 10px;
+  z-index: 10;
+  padding: 10px;
+  border-radius: 4px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  transition: none; /* no animation on desktop */
 }
 
 /* Legend Header */
@@ -79,7 +20,7 @@ body, html {
   justify-content: space-between;
   align-items: center;
   font-weight: bold;
-  padding: 10px;
+  margin-bottom: 10px;
 }
 
 .legend-header button {
@@ -91,9 +32,15 @@ body, html {
   cursor: pointer;
 }
 
+/* Collapsed State */
+#legend-panel.collapsed {
+  max-height: 60px;
+  overflow: hidden;
+}
+
 /* Search Bar */
 #address-search {
-  margin: 0 10px 10px 10px;
+  margin-bottom: 10px;
 }
 
 #search-input {
@@ -114,77 +61,28 @@ body, html {
 
 #legend-content {
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  max-height: calc(25vh - 120px); /* subtract header/search */
+  max-height: calc(100vh - 200px);
 }
 
-/* Toggle Button */
-#legend-toggle {
-  background: #007bff;
-  color: white;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-#legend-toggle:hover {
-  background: #333;
-}
-
-/* Category & Items */
-.legend-category {
-  margin-bottom: 12px;
-}
-
-.legend-category h4 {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  margin: 0;
-}
-
-.legend-category .arrow {
-  margin-right: 6px;
-}
-
-.legend-org-list {
-  list-style: none;
-  padding-left: 16px;
-  margin: 6px 0 0 0;
-}
-
-.legend-org-list li {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  margin: 3px 0;
-  cursor: pointer;
-}
-
-.legend-color-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.legend-org-list li.highlight {
-  background-color: #f0f8ff;
-  transition: background-color 0.3s;
-}
-
-/* Responsive Design */
+/* Mobile Overrides */
 @media (max-width: 600px) {
   #legend-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     width: 100%;
     max-height: 25vh;
     border-radius: 12px 12px 0 0;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
+    background: rgba(255,255,255,0.95);
+    padding: 10px;
+    z-index: 1000;
+    transition: max-height 0.3s ease;
   }
 
   #legend-panel.collapsed {
-    max-height: 60px;
+    max-height: 60px; /* show just header */
   }
 
   #legend-content {
@@ -195,106 +93,4 @@ body, html {
     font-size: 1rem;
     padding: 8px;
   }
-}
-
-.mapboxgl-ctrl-top-right {
-  top: 10px;
-  right: 10px;
-}
-
-@media (max-width: 600px) {
-  .mapboxgl-ctrl-top-right {
-    top: 60px;
-    right: 10px;
-    z-index: 1000;
-  }
-}
-
-.logo {
-  max-height: 100px;
-  margin: 10px;
-  display: inline-block;
-}
-
-.map-guide-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255,255,255,0.95);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000;
-  padding: 20px;
-}
-
-.map-guide-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  max-width: 600px;
-  width: 100%;
-  font-family: 'Roboto Mono', monospace;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-  position: relative;
-}
-
-#map-guide-close {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-#site-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: white;
-  padding: 10px 20px;
-  z-index: 1001;
-  position: relative;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-}
-
-#fth-logo {
-  height: 40px;
-  margin-right: 12px;
-}
-
-#site-header h1 {
-  font-size: 20px;
-  margin: 0;
-  font-family: 'Roboto Mono', monospace;
-}
-
-#info-button {
-  font-size: 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 4px;
-  align-self: center;
-}
-
-#info-button:hover {
-  background: #eee;
-}
-
-.marker-label {
-  pointer-events: none;
-  font-family: Roboto, sans-serif;
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
 }
