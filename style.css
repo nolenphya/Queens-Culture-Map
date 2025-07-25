@@ -63,12 +63,13 @@ body, html {
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.85);
   box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-  max-height: 50vh; /* 50% screen height */
+  height: 50vh; /* 50% screen height */
   display: flex;
   flex-direction: column;
   /* remove overflow:hidden — instead clip only horizontally */
   overflow: hidden;
 }
+
 /* Collapsed state */
 #legend-panel.collapsed #legend-wrapper {
   max-height: 0px; /* show header only */
