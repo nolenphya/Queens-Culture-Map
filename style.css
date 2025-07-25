@@ -60,16 +60,15 @@ body, html {
   top: 100px;
   left: 10px;
   z-index: 10;
-  padding: 0; /* remove padding here, move inside */
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.85);
   box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-  max-height: 50vh; /* <-- 50% screen height */
+  max-height: 50vh; /* 50% screen height */
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* prevent "floating" content */
+  /* remove overflow:hidden — instead clip only horizontally */
+  overflow: hidden;
 }
-
 /* Collapsed state */
 #legend-panel.collapsed #legend-wrapper {
   max-height: 0px; /* show header only */
@@ -122,9 +121,11 @@ body, html {
 
 
 /* Legend Content fills the rest */
+/* This is the scrollable area */
 #legend-content {
   flex: 1;
-  overflow-y: auto;
+  overflow-y: auto; /* enable vertical scrolling */
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   padding: 10px;
 }
