@@ -65,7 +65,7 @@ body, html {
   background: rgba(255, 255, 255, 0.85);
   box-shadow: 0 2px 12px rgba(0,0,0,0.15);
   transition: none; /* no animation on desktop */
-  max-height: 75vh;
+  max-height: 700px;
   overflow-y: auto;
 
 }
