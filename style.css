@@ -122,9 +122,11 @@ body, html {
 
 /* Legend Content fills the rest */
 /* This is the scrollable area */
+/* THIS is the important change */
 #legend-content {
-  flex: 1;
-  overflow-y: auto; /* enable vertical scrolling */
+  flex-grow: 1;        /* take all remaining space */
+  min-height: 0;       /* allow it to shrink properly */
+  overflow-y: auto;    /* enable scrolling */
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   padding: 10px;
