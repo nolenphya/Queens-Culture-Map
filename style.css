@@ -62,11 +62,12 @@ body, html {
   z-index: 10;
   padding: 10px;
   border-radius: 4px;
-  max-height: calc(100vh - 50vh);
-  overflow-y: auto;
   background: rgba(255, 255, 255, 0.85);
   box-shadow: 0 2px 12px rgba(0,0,0,0.15);
   transition: none; /* no animation on desktop */
+  max-height: 75vh;
+  overflow-y: auto;
+
 }
 
 /* Collapsed state */
