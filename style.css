@@ -240,20 +240,20 @@ body, html {
 /* Info Box (New Positioning) */
 #map-guide-overlay {
   position: fixed;
-  bottom: 20px;  /* Move to bottom */
-  right: 20px;   /* Move to right */
-  width: 300px;  /* Set a fixed width */
-  max-height: 50vh;  /* Set a max height for the box */
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  max-height: 50vh;
   background: rgba(255, 255, 255, 0.97);
-  display: flex;
+  display: none;  /* Start hidden */
   flex-direction: column;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-  z-index: 10000; /* Ensure it sits above the map */
+  z-index: 10000;
   overflow-y: auto;
-  visibility: visible;  /* Make sure it's visible by default */
 }
+
 
 .map-guide-content {
   background: white;

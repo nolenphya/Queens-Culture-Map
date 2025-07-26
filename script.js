@@ -398,6 +398,8 @@ document.getElementById('reset-legend').addEventListener('click', () => {
 
 
 map.on('load', () => {
+    // Show info box by default when map loads
+   document.getElementById('map-guide-overlay').style.display = 'flex';
 
   Object.values(iconMap).forEach(iconName => {
     map.loadImage(`icons/${iconName}.png`, (error, image) => {
@@ -473,22 +475,23 @@ intro.addEventListener('touchmove', (e) => {
 
 
 document.addEventListener('DOMContentLoaded', () => {
-  const toggleBtn = document.getElementById('legend-toggle');
-  const wrapper = document.getElementById('legend-wrapper');
-  
-  toggleBtn.addEventListener('click', () => {
-    wrapper.classList.toggle('collapsed');
-    toggleBtn.textContent = wrapper.classList.contains('collapsed') ? '▲' : '▼';
+  const legendPanel = document.getElementById('legend-panel');
+const legendToggle = document.getElementById('legend-toggle');
 
-  });
+legendToggle.addEventListener('click', () => {
+  legendPanel.classList.toggle('collapsed');
+  legendToggle.textContent = legendPanel.classList.contains('collapsed') ? 'Show' : 'Hide';
 });
+})
 
-  document.getElementById('info-button').addEventListener('click', () => {
+
+
+document.getElementById('info-button').addEventListener('click', () => {
   document.getElementById('map-guide-overlay').style.display = 'flex';
 });
 
 document.getElementById('map-guide-close').addEventListener('click', () => {
-  document.getElementById('map-guide-overlay').style.visibility = 'hidden';
+  document.getElementById('map-guide-overlay').style.display = 'none';
 });
 
 
