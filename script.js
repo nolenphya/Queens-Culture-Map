@@ -398,8 +398,6 @@ document.getElementById('reset-legend').addEventListener('click', () => {
 
 
 map.on('load', () => {
-    // Show info box by default when map loads
-  document.getElementById('map-guide-overlay').style.visibility = 'visible';
 
   Object.values(iconMap).forEach(iconName => {
     map.loadImage(`icons/${iconName}.png`, (error, image) => {
