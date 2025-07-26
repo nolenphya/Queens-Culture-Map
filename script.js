@@ -395,7 +395,12 @@ document.getElementById('reset-legend').addEventListener('click', () => {
 
 
 // Map load
+
+
 map.on('load', () => {
+    // Show info box by default when map loads
+  document.getElementById('map-guide-overlay').style.visibility = 'visible';
+
   Object.values(iconMap).forEach(iconName => {
     map.loadImage(`icons/${iconName}.png`, (error, image) => {
       if (error) {
@@ -467,6 +472,8 @@ intro.addEventListener('touchmove', (e) => {
   }
 });
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
   const toggleBtn = document.getElementById('legend-toggle');
   const wrapper = document.getElementById('legend-wrapper');
@@ -483,8 +490,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.getElementById('map-guide-close').addEventListener('click', () => {
-  document.getElementById('map-guide-overlay').style.display = 'none';
+  document.getElementById('map-guide-overlay').style.visibility = 'hidden';
 });
+
 
 const legendPanel = document.getElementById('legend-panel');
 const legendToggle = document.getElementById('legend-toggle');
