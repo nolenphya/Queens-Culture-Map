@@ -495,6 +495,7 @@ document.getElementById('map-guide-close').addEventListener('click', () => {
 });
 
 
+
 const legendPanel = document.getElementById('legend-panel');
 const legendToggle = document.getElementById('legend-toggle');
 

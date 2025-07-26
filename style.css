@@ -242,16 +242,16 @@ body, html {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 300px;
-  max-height: 50vh;
+  width: 320px;         /* a bit wider */
+  max-height: 80vh;     /* taller so more content fits */
   background: rgba(255, 255, 255, 0.97);
-  display: none;  /* Start hidden */
+  display: none;        /* hidden by default */
   flex-direction: column;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
   z-index: 10000;
-  overflow-y: auto;
+  overflow-y: auto;      /* allow scrolling if it overflows */
 }
 
 
