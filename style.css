@@ -242,17 +242,18 @@ body, html {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 320px;         /* a bit wider */
-  max-height: 80vh;     /* taller so more content fits */
+  width: 420px;         /* wider */
+  max-height: 60vh;     /* keep it moderate height */
   background: rgba(255, 255, 255, 0.97);
-  display: none;        /* hidden by default */
+  display: none;        /* hidden until intro closes */
   flex-direction: column;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
   z-index: 10000;
-  overflow-y: auto;      /* allow scrolling if it overflows */
+  overflow-y: auto;      /* scroll if needed */
 }
+
 
 
 .map-guide-content {

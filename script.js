@@ -399,7 +399,7 @@ document.getElementById('reset-legend').addEventListener('click', () => {
 
 map.on('load', () => {
     // Show info box by default when map loads
-   document.getElementById('map-guide-overlay').style.display = 'flex';
+    document.getElementById('map-guide-overlay').style.visibility = 'visible';
 
   Object.values(iconMap).forEach(iconName => {
     map.loadImage(`icons/${iconName}.png`, (error, image) => {
@@ -461,9 +461,15 @@ map.on('load', () => {
 // UI toggle logic
 map.addControl(new mapboxgl.NavigationControl({ showCompass: true }), 'top-right');
 
+// Hide by default
+document.getElementById('map-guide-overlay').style.display = 'none';
+
+// When intro is closed, show the info box
 document.getElementById('close-intro').addEventListener('click', () => {
   document.getElementById('intro-overlay').style.display = 'none';
+  document.getElementById('map-guide-overlay').style.display = 'flex';
 });
+
 
 const intro = document.getElementById('intro-overlay');
 intro.addEventListener('touchmove', (e) => {
@@ -493,6 +499,7 @@ document.getElementById('info-button').addEventListener('click', () => {
 document.getElementById('map-guide-close').addEventListener('click', () => {
   document.getElementById('map-guide-overlay').style.display = 'none';
 });
+
 
 
 
