@@ -490,19 +490,34 @@ legendToggle.addEventListener('click', () => {
 });
 })
 
-
+document.getElementById('info-button').addEventListener('click', () => {
+  document.getElementById('map-guide-overlay').style.display = 'flex';
+});
 
 document.getElementById('info-button').addEventListener('click', () => {
   document.getElementById('map-guide-overlay').style.display = 'flex';
 });
 
-document.getElementById('map-guide-close').addEventListener('click', () => {
-  document.getElementById('map-guide-overlay').style.display = 'none';
+document.addEventListener('DOMContentLoaded', () => {
+  const mapGuideOverlay = document.getElementById('map-guide-overlay');
+  const mapGuideClose = document.getElementById('map-guide-close');
+  const infoButton = document.getElementById('info-button');
+
+  // Open
+  if (infoButton) {
+    infoButton.addEventListener('click', () => {
+      mapGuideOverlay.style.display = 'flex';
+    });
+  }
+
+  // Close
+  if (mapGuideClose) {
+    mapGuideClose.addEventListener('click', () => {
+      mapGuideOverlay.style.display = 'none';
+    });
+  }
 });
 
-document.getElementById('info-button').addEventListener('click', () => {
-  document.getElementById('map-guide-overlay').style.display = 'flex';
-});
 
 const legendPanel = document.getElementById('legend-panel');
 const legendToggle = document.getElementById('legend-toggle');
