@@ -500,8 +500,9 @@ document.getElementById('map-guide-close').addEventListener('click', () => {
   document.getElementById('map-guide-overlay').style.display = 'none';
 });
 
-
-
+document.getElementById('info-button').addEventListener('click', () => {
+  document.getElementById('map-guide-overlay').style.display = 'flex';
+});
 
 const legendPanel = document.getElementById('legend-panel');
 const legendToggle = document.getElementById('legend-toggle');
