@@ -271,6 +271,9 @@ background: none;
   right: 12px;
   font-size: 24px;
   cursor: pointer;
+  background: none;
+  border: none;
+  color: #333;
 }
 
 #site-header {
