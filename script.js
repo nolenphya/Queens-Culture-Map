@@ -511,10 +511,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
-const legendPanel = document.getElementById('legend-panel');
-const legendToggle = document.getElementById('legend-toggle');
-
-legendToggle.addEventListener('click', () => {
-  legendPanel.classList.toggle('collapsed');
-  legendToggle.textContent = legendPanel.classList.contains('collapsed') ? 'Show' : 'Hide';
-});
