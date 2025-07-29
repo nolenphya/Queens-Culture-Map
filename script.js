@@ -490,14 +490,6 @@ legendToggle.addEventListener('click', () => {
 });
 })
 
-document.getElementById('info-button').addEventListener('click', () => {
-  document.getElementById('map-guide-overlay').style.display = 'flex';
-});
-
-document.getElementById('info-button').addEventListener('click', () => {
-  document.getElementById('map-guide-overlay').style.display = 'flex';
-});
-
 document.addEventListener('DOMContentLoaded', () => {
   const mapGuideOverlay = document.getElementById('map-guide-overlay');
   const mapGuideClose = document.getElementById('map-guide-close');

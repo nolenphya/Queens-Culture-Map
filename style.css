@@ -304,16 +304,22 @@ background: none;
 
 /* Info Button Positioning */
 #info-button {
-  position: fixed;  /* Fix the button in place */
-  bottom: 20px;     /* 20px from the bottom */
-  right: 20px;      /* 20px from the right */
-  font-size: 20px;
-  background: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1001;
+  background: #007bff;
+  color: white;
   border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
   cursor: pointer;
-  padding: 5px 10px;
-  border-radius: 4px;
-  z-index: 1001;    /* Ensure it sits above the map */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #info-button:hover {
