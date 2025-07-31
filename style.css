@@ -55,17 +55,18 @@ body, html {
 
 /* Legend Panel */
 #legend-panel {
-  position: absolute;
-  top: 100px;
-  left: 10px;
-  z-index: 10;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.85);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-  max-height: 60vh;  /* Makes the box height flexible */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+     position: fixed;       /* instead of absolute */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 25vh;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
+    background: rgba(255,255,255,0.95);
+    padding: 10px;
+    z-index: 1000;
+    transition: max-height 0.3s ease;
 }
 
 /* Collapsed state */
@@ -218,7 +219,7 @@ body, html {
   }
 
  #site-header h1 {
-  font-size: 24px;
+  font-size: 20px;
   margin: 0;
   font-family: 'Arial';
 }
@@ -247,6 +248,23 @@ body, html {
   text-align: center;
   font-family: inherit;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+#info-button {
+  position: static;       /* remove fixed positioning */
+  margin-left: auto;      /* push to the far right */
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 }
 
