@@ -188,31 +188,47 @@ body, html {
   transition: background-color 0.3s;
 }
 
+@media (max-width: 600px) {
+  #site-header h1 {
+    font-size: 20px !important;
+    line-height: 1.2;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 600px) {
   #legend-panel {
-    position: static;       /* remove fixed positioning */
-  margin-left: auto;      /* push to the far right */
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 20px;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+ position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 60px; /* collapsed */
+    border-radius: 12px 12px 0 0;
+    background: rgba(255,255,255,0.95);
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.15);
+    transition: max-height 0.3s ease;
+    overflow: hidden;
   }
 
   #legend-panel.collapsed {
-    max-height: 60px;
+   max-height: 60px; /* collapse to just header */
   }
 
+  #legend-panel.expanded {
+    max-height: 70vh; /* expanded height */
+  }
+
+  #legend-wrapper {
+    max-height: calc(70vh - 60px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
   #legend-content {
-    max-height: calc(25vh - 120px);
+      max-height: calc(30vh - 60px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   #search-input {
@@ -220,10 +236,6 @@ body, html {
     padding: 8px;
   }
 
- #site-header h1 {
-  font-size: 16px;
-  font-family: 'Arial';
-}
 
 #intro-overlay {
    position: fixed;
