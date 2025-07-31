@@ -511,3 +511,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+const legendPanel = document.getElementById('legend-panel');
+const legendHeader = legendPanel.querySelector('.legend-header');
+
+legendHeader.addEventListener('click', () => {
+  legendPanel.classList.toggle('expanded');
+});
+
+document.addEventListener('click', (e) => {
+  const legendPanel = document.getElementById('legend-panel');
+  if (legendPanel.classList.contains('expanded') && !legendPanel.contains(e.target)) {
+    legendPanel.classList.remove('expanded');
+  }
+});
