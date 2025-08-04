@@ -328,6 +328,13 @@ function buildLegend(tagGroups) {
       list.className = 'legend-org-list';
       list.style.display = 'block'; // Initially expanded
 
+// Sort markers alphabetically by organization name
+markers.sort((a, b) => {
+  const nameA = (a.rowData["Org Name"] || "").toLowerCase();
+  const nameB = (b.rowData["Org Name"] || "").toLowerCase();
+  return nameA.localeCompare(nameB);
+});
+
       // Create each marker entry under this tag
       markers.forEach(marker => {
         const li = document.createElement('li');
