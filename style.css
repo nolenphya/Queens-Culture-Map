@@ -257,7 +257,7 @@ background: none;
 }
 
 #fth-logo {
-  height: 40px;
+  height: 80px;
   margin-right: 12px;
 }
 
@@ -303,6 +303,13 @@ background: none;
     font-size: 14px !important;
     line-height: 1.2;
   }
+}
+
+@media (max-width: 600px) {
+#fth-logo {
+  height: 20px;
+  margin-right: 12px;
+}
 }
 
 @media (max-width: 600px) {
