@@ -29,6 +29,21 @@ body, html {
   align-items: center;
   overflow-y: auto;
   padding: 20px;
+
+  /* Add background image */
+  background-image: url('worldfair.jpg'); /* make sure path is correct */
+  background-size: cover;
+  background-position: center;
+}
+
+/* Use a semi-transparent overlay for opacity effect */
+#intro-overlay::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255, 255, 255, 0.25); /* adjust darkness/lightness */
+  z-index: -1;
 }
 
 .intro-content {
