@@ -405,9 +405,9 @@ document.getElementById('reset-legend').addEventListener('click', () => {
 
 
 map.on('load', () => {
-    // Show info box by default when map loads
-    document.getElementById('map-guide-overlay').style.visibility = 'visible';
-
+  // =======================
+  // Load Custom Icons if Any
+  // =======================
   Object.values(iconMap).forEach(iconName => {
     map.loadImage(`icons/${iconName}.png`, (error, image) => {
       if (error) {
@@ -418,11 +418,20 @@ map.on('load', () => {
     });
   });
 
-  
+  // =======================
+  // Fetch and Add Markers
+  // =======================
+  fetchData().then(records => {
+    const data = records.map(r => ({
+      id: r.id,
+      ...r.fields
+    }));
+    createMarkers(data);
+  });
 
-
-  fetchData();
-
+  // =======================
+  // Subway Lines Source + Layer
+  // =======================
   map.addSource('subway-lines', {
     type: 'geojson',
     data: 'nyc-subway-routes.geojson'
@@ -450,32 +459,15 @@ map.on('load', () => {
     }
   });
 
+  // =======================
+  // Subway Stops Source + Layers
+  // =======================
   map.addSource('subway-stops', {
     type: 'geojson',
     data: 'nyc-subway-stops.geojson'
   });
 
-  map.addLayer({
-    id: 'subway-stations-stops',
-    type: 'circle',
-    source: 'subway-stops',
-    paint: {
-      'circle-radius': 1,
-      'circle-color': '#ffffff',
-      'circle-stroke-width': 1,
-      'circle-stroke-color': '#000000'
-    }
-  });
-});
-
-map.on('load', () => {
-  // Your icon loading + data fetch
-
-  map.addSource('subway-stops', {
-    type: 'geojson',
-    data: 'nyc-subway-stops.geojson'
-  });
-
+  // Stop Circles
   map.addLayer({
     id: 'subway-stations-stops',
     type: 'circle',
@@ -488,7 +480,7 @@ map.on('load', () => {
     }
   });
 
-  // ✅ Add labels AFTER source is added
+  // Station Labels (Initially Hidden)
   map.addLayer({
     id: 'subway-station-labels',
     type: 'symbol',
@@ -508,6 +500,9 @@ map.on('load', () => {
   });
 });
 
+// =======================
+// Zoom-based Label Visibility
+// =======================
 map.on('zoom', () => {
   const zoomLevel = map.getZoom();
   map.setLayoutProperty(
@@ -515,7 +510,15 @@ map.on('zoom', () => {
     'visibility',
     zoomLevel >= 14 ? 'visible' : 'none'
   );
+
+  // Show marker labels at same zoom level
+  allMarkers.forEach(marker => {
+    if (marker.labelElement) {
+      marker.labelElement.style.display = zoomLevel >= 14 ? 'block' : 'none';
+    }
+  });
 });
+
 
 
 // UI toggle logic
