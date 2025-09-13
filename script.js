@@ -418,14 +418,7 @@ map.on('load', () => {
     });
   });
 
-  map.on('zoom', () => {
-  const zoomLevel = map.getZoom();
-  map.setLayoutProperty(
-    'subway-station-labels',
-    'visibility',
-    zoomLevel >= 14 ? 'visible' : 'none'
-  );
-});
+  
 
 
   fetchData();
@@ -475,22 +468,53 @@ map.on('load', () => {
   });
 });
 
-map.addLayer({
-  id: 'subway-station-labels',
-  type: 'symbol',
-  source: 'subway-stops',
-  layout: {
-    'text-field': ['get', 'name'],  // The property in your GeoJSON with stop names
-    'text-size': 12,
-    'text-offset': [0, 1.2],
-    'text-anchor': 'top',
-    'visibility': 'none' // start hidden, will toggle on zoom
-  },
-  paint: {
-    'text-color': '#000000',
-    'text-halo-color': '#ffffff',
-    'text-halo-width': 1
-  }
+map.on('load', () => {
+  // Your icon loading + data fetch
+
+  map.addSource('subway-stops', {
+    type: 'geojson',
+    data: 'nyc-subway-stops.geojson'
+  });
+
+  map.addLayer({
+    id: 'subway-stations-stops',
+    type: 'circle',
+    source: 'subway-stops',
+    paint: {
+      'circle-radius': 1,
+      'circle-color': '#ffffff',
+      'circle-stroke-width': 1,
+      'circle-stroke-color': '#000000'
+    }
+  });
+
+  // ✅ Add labels AFTER source is added
+  map.addLayer({
+    id: 'subway-station-labels',
+    type: 'symbol',
+    source: 'subway-stops',
+    layout: {
+      'text-field': ['get', 'name'],
+      'text-size': 12,
+      'text-offset': [0, 1.2],
+      'text-anchor': 'top',
+      'visibility': 'none'
+    },
+    paint: {
+      'text-color': '#000000',
+      'text-halo-color': '#ffffff',
+      'text-halo-width': 1
+    }
+  });
+});
+
+map.on('zoom', () => {
+  const zoomLevel = map.getZoom();
+  map.setLayoutProperty(
+    'subway-station-labels',
+    'visibility',
+    zoomLevel >= 14 ? 'visible' : 'none'
+  );
 });
 
 
