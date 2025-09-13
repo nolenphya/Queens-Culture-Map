@@ -68,6 +68,17 @@ body, html {
   cursor: pointer;
 }
 
+#add-info {
+  margin-top: 20px;
+  padding: 10px 16px;
+  font-size: 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
 /* Legend Panel */
 #legend-panel {
   position: absolute;
