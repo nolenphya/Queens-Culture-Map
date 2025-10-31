@@ -50,12 +50,26 @@ function getColorFor(tag) {
 
 // Fetch data
 async function fetchData() {
-  const res = await fetch(`${AIRTABLE_URL}?view=Grid%20view&filterByFormula=Approved`, {
-    headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
-  });
+  let url = `${AIRTABLE_URL}?view=Grid%20view&filterByFormula=Approved&pageSize=100`;
+  const allRecords = [];
 
-  const json = await res.json();
-  const rawRecords = json.records.map(rec => ({ id: rec.id, ...rec.fields }));
+  while (true) {
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
+    });
+    if (!res.ok) throw new Error(`Airtable error ${res.status}`);
+    const json = await res.json();
+
+    if (json.records && json.records.length) {
+      allRecords.push(...json.records);
+    }
+
+    if (!json.offset) break; // runs the offset until there no more pages
+    url = `${AIRTABLE_URL}?view=Grid%20view&filterByFormula=Approved&pageSize=100&offset=${json.offset}`;
+  }
+
+  // from here down, our original logic stays the same
+  const rawRecords = allRecords.map(rec => ({ id: rec.id, ...rec.fields }));
 
   const enrichedRecords = await Promise.all(
     rawRecords.map(async (record) => {
