@@ -49,22 +49,42 @@ function getColorFor(tag) {
 }
 
 // Fetch data
+// =======================
+// Data Fetching (with Pagination)
+// =======================
 async function fetchData() {
-  const res = await fetch(`${AIRTABLE_URL}?view=Grid%20view&filterByFormula=Approved`, {
-    headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
-  });
+  const filterFormula = encodeURIComponent("{Approved}=TRUE()");
+  const viewName = encodeURIComponent("main");
+  let allRecords = [];
+  let offset = null;
 
-  const json = await res.json();
-  const rawRecords = json.records.map(rec => ({ id: rec.id, ...rec.fields }));
+  try {
+    do {
+      const fetchUrl = `${AIRTABLE_URL}?view=${viewName}&filterByFormula=${filterFormula}${
+        offset ? `&offset=${offset}` : ""
+      }`;
 
-  const enrichedRecords = await Promise.all(
-    rawRecords.map(async (record) => {
-      const hasLatLng = parseFloat(record.Latitude) && parseFloat(record.Longitude);
-      return hasLatLng ? record : await geocodeAndSaveMissingCoords(record);
-    })
-  );
+      const res = await fetch(fetchUrl, {
+        headers: { Authorization: `Bearer ${AIRTABLE_API_KEY}` }
+      });
 
-  createMarkers(enrichedRecords.filter(Boolean));
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error(`Airtable Error (${res.status}):`, errorText);
+        return allRecords;
+      }
+
+      const data = await res.json();
+      allRecords = allRecords.concat(data.records || []);
+      offset = data.offset || null; // Airtable gives a new offset if more pages exist
+    } while (offset);
+
+    return allRecords;
+
+  } catch (err) {
+    console.error("Fetch failed:", err);
+    return allRecords;
+  }
 }
 
 // Geocode missing
